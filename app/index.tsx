@@ -15,7 +15,7 @@ export default function HomeScreen() {
                         styles.startButton,
                         pressed && styles.startButtonPressed
                     ]}
-                    onPress={() => router.push('/game')}
+                    onPress={() => router.push('/game/training')}
                 >
                     <Text style={styles.startButtonText}>Start Training</Text>
                 </Pressable>
