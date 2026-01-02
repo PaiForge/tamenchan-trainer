@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Modal, Pressable } from 'react-native';
-import { Hai } from 'mahjong-react-ui';
+import { Hai } from '@pai-forge/mahjong-react-ui';
 import type { HaiKindId } from '@pai-forge/riichi-mahjong';
 
 interface CheatsheetModalProps {

@@ -1,11 +1,6 @@
 {
   "extends": "expo/tsconfig.base.json",
   "compilerOptions": {
-    "strict": true,
-    "paths": {
-      "mahjong-react-ui": [
-        "../mahjong-react-ui/src/index.ts"
-      ]
-    }
+    "strict": true
   }
 }

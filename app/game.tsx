@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { Hai } from 'mahjong-react-ui';
+import { Hai } from '@pai-forge/mahjong-react-ui';
 import { HaiKind } from '@pai-forge/riichi-mahjong';
 
 export default function GameScreen() {

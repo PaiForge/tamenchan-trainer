@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Pressable, SafeAreaView, useWindowDimensions } from 'react-native';
 import { Stack, router } from 'expo-router';
-import { Hai } from 'mahjong-react-ui';
+import { Hai } from '@pai-forge/mahjong-react-ui';
 import { HaiKind, type HaiKindId } from '@pai-forge/riichi-mahjong';
 import { generateProblem, checkAnswer, GameState, tileToNumber } from '../../src/features/training/GameManager';
 import { CheatsheetModal } from '../../src/components/CheatsheetModal';

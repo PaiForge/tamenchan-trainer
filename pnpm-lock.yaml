@@ -11,6 +11,9 @@ importers:
       '@expo/metro-runtime':
         specifier: ~6.1.2
         version: 6.1.2(expo@54.0.30)(react-dom@19.1.0(react@19.1.0))(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      '@pai-forge/mahjong-react-ui':
+        specifier: ^0.1.0
+        version: 0.1.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@pai-forge/riichi-mahjong':
         specifier: ^0.1.0
         version: 0.1.0
@@ -29,9 +32,6 @@ importers:
       expo-status-bar:
         specifier: ~3.0.9
         version: 3.0.9(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-      mahjong-react-ui:
-        specifier: file:../mahjong-react-ui
-        version: file:../mahjong-react-ui(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -747,6 +747,13 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@pai-forge/mahjong-react-ui@0.1.0':
+    resolution: {integrity: sha512-wXha6aE+6lDh2do1EbEReCBnPewOrmB1+hd5vaKEhZMKcT2qDzQLQnzmFlT90c+GcHj6C1XNUJRXZITEhzBxkw==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
 
   '@pai-forge/riichi-mahjong@0.1.0':
     resolution: {integrity: sha512-WGfVEcdRR3dobSmRQsG/L1RijJ6UqZiJpXRuPKCWCsMaDR0kuoG1nTvMSZ7YvJIRnJcMW9cZ9qG8lNgIUY9Rog==}
@@ -2103,13 +2110,6 @@ packages:
 
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
-
-  mahjong-react-ui@file:../mahjong-react-ui:
-    resolution: {directory: ../mahjong-react-ui, type: directory}
-    engines: {node: '>=20.0.0'}
-    peerDependencies:
-      react: ^18.0.0 || ^19.0.0
-      react-dom: ^18.0.0 || ^19.0.0
 
   makeerror@1.0.12:
     resolution: {integrity: sha512-JmqCvUhmt43madlpFzG4BQzG2Z3m6tvQDNKdClZnO3VbIudJYmxsT0FNJMeiB2+JTSlTQTSbU8QdesVmwJcmLg==}
@@ -4101,6 +4101,12 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
+  '@pai-forge/mahjong-react-ui@0.1.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@pai-forge/riichi-mahjong': 0.1.0
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+
   '@pai-forge/riichi-mahjong@0.1.0': {}
 
   '@radix-ui/primitive@1.1.3': {}
@@ -5537,12 +5543,6 @@ snapshots:
   lru-cache@5.1.1:
     dependencies:
       yallist: 3.1.1
-
-  mahjong-react-ui@file:../mahjong-react-ui(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
-    dependencies:
-      '@pai-forge/riichi-mahjong': 0.1.0
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
 
   makeerror@1.0.12:
     dependencies:
