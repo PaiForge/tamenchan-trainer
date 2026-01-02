@@ -16,6 +16,8 @@ const config = getDefaultConfig(projectRoot);
 //   path.resolve(workspaceRoot, 'node_modules'),
 // ];
 
+const { withNativeWind } = require('nativewind/metro');
+
 // 3. Force Metro to resolve (sub)dependencies only from the `nodeModulesPaths`
 // config.resolver.disableHierarchicalLookup = true;
 
@@ -24,4 +26,4 @@ const config = getDefaultConfig(projectRoot);
 //   'mahjong-react-ui': path.resolve(workspaceRoot, 'mahjong-react-ui'),
 // };
 
-module.exports = config;
+module.exports = withNativeWind(config, { input: './src/global.css' });
