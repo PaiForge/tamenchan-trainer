@@ -6,11 +6,11 @@ import { generateProblem, checkAnswer, GameState } from '../../../features/train
 import { CheatsheetModal } from '../../../components/CheatsheetModal';
 
 // Components
-import { CustomBackButton } from './components/CustomBackButton';
-import { GameStatus } from './components/GameStatus';
-import { AnswerInput } from './components/AnswerInput';
-import { ActionButtons } from './components/ActionButtons';
-import { HandDisplay } from './components/HandDisplay';
+import { CustomBackButton } from './_components/CustomBackButton';
+import { GameStatus } from './_components/GameStatus';
+import { AnswerInput } from './_components/AnswerInput';
+import { ActionButtons } from './_components/ActionButtons';
+import { HandDisplay } from './_components/HandDisplay';
 
 export default function TrainingScreen() {
     const [gameState, setGameState] = useState<GameState | null>(null);
