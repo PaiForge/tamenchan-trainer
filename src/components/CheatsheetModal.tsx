@@ -1,15 +1,22 @@
-import React from 'react';
-import { View, Text, StyleSheet, Modal, Pressable } from 'react-native';
-import { Hai } from '@pai-forge/mahjong-react-ui';
-import type { HaiKindId } from '@pai-forge/riichi-mahjong';
+import React from "react";
+import { View, Text, StyleSheet, Modal, Pressable } from "react-native";
+import { Hai } from "@pai-forge/mahjong-react-ui";
+import type { HaiKindId } from "@pai-forge/riichi-mahjong";
 
 interface CheatsheetModalProps {
-    visible: boolean;
-    onClose: () => void;
-    correctWaits: HaiKindId[];
+    readonly visible: boolean;
+    readonly onClose: () => void;
+    readonly correctWaits: readonly HaiKindId[];
 }
 
-export function CheatsheetModal({ visible, onClose, correctWaits }: CheatsheetModalProps) {
+/**
+ *
+ */
+export function CheatsheetModal({
+    visible,
+    onClose,
+    correctWaits,
+}: Readonly<CheatsheetModalProps>) {
     return (
         <Modal
             animationType="fade"
@@ -42,17 +49,17 @@ export function CheatsheetModal({ visible, onClose, correctWaits }: CheatsheetMo
 const styles = StyleSheet.create({
     centeredView: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
     modalView: {
         margin: 20,
-        backgroundColor: '#1f2937', // gray-800
+        backgroundColor: "#1f2937", // gray-800
         borderRadius: 20,
         padding: 35,
-        alignItems: 'center',
-        shadowColor: '#000',
+        alignItems: "center",
+        shadowColor: "#000",
         shadowOffset: {
             width: 0,
             height: 2,
@@ -64,15 +71,15 @@ const styles = StyleSheet.create({
     },
     modalTitle: {
         fontSize: 20,
-        fontWeight: 'bold',
-        color: '#fff',
+        fontWeight: "bold",
+        color: "#fff",
         marginBottom: 24,
     },
     tilesContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
+        flexDirection: "row",
+        flexWrap: "wrap",
         gap: 8,
-        justifyContent: 'center',
+        justifyContent: "center",
         marginBottom: 32,
     },
     button: {
@@ -82,12 +89,12 @@ const styles = StyleSheet.create({
         minWidth: 120,
     },
     buttonClose: {
-        backgroundColor: '#374151', // gray-700
+        backgroundColor: "#374151", // gray-700
     },
     textStyle: {
-        color: 'white',
-        fontWeight: 'bold',
-        textAlign: 'center',
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center",
         fontSize: 16,
     },
 });

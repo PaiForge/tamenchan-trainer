@@ -1,17 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { View, SafeAreaView, useWindowDimensions } from 'react-native';
-import { Stack } from 'expo-router';
-import { HaiKindId } from '@pai-forge/riichi-mahjong';
-import { generateProblem, checkAnswer, GameState } from '../../../features/training/GameManager';
-import { CheatsheetModal } from '../../../components/CheatsheetModal';
+import React, { useEffect, useState } from "react";
+import { View, useWindowDimensions } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Stack } from "expo-router";
+import { HaiKindId } from "@pai-forge/riichi-mahjong";
+import {
+    generateProblem,
+    checkAnswer,
+    GameState,
+} from "../../../features/training/GameManager";
+import { CheatsheetModal } from "../../../components/CheatsheetModal";
 
 // Components
-import { CustomBackButton } from './_components/CustomBackButton';
-import { GameStatus } from './_components/GameStatus';
-import { AnswerInput } from './_components/AnswerInput';
-import { ActionButtons } from './_components/ActionButtons';
-import { HandDisplay } from './_components/HandDisplay';
+import { CustomBackButton } from "./_components/CustomBackButton";
+import { GameStatus } from "./_components/GameStatus";
+import { AnswerInput } from "./_components/AnswerInput";
+import { ActionButtons } from "./_components/ActionButtons";
+import { HandDisplay } from "./_components/HandDisplay";
 
+/**
+ *
+ */
 export default function TrainingScreen() {
     const [gameState, setGameState] = useState<GameState | null>(null);
     const [selectedWaits, setSelectedWaits] = useState<HaiKindId[]>([]);
@@ -32,7 +40,10 @@ export default function TrainingScreen() {
     const MAX_TILE_HEIGHT = 78;
 
     // Calculate optimal width to fit 13 tiles
-    const calculatedTileWidth = Math.min(MAX_TILE_WIDTH, (AVAILABLE_WIDTH - TOTAL_GAPS_WIDTH) / NUM_TILES);
+    const calculatedTileWidth = Math.min(
+        MAX_TILE_WIDTH,
+        (AVAILABLE_WIDTH - TOTAL_GAPS_WIDTH) / NUM_TILES,
+    );
     const scaleFactor = calculatedTileWidth / MAX_TILE_WIDTH;
     const calculatedTileHeight = MAX_TILE_HEIGHT * scaleFactor;
 
@@ -51,9 +62,9 @@ export default function TrainingScreen() {
         if (isCorrect) return; // Disable input if already answered correctly
 
         if (selectedWaits.includes(tile)) {
-            setSelectedWaits(prev => prev.filter(t => t !== tile));
+            setSelectedWaits((prev) => prev.filter((t) => t !== tile));
         } else {
-            setSelectedWaits(prev => [...prev, tile]);
+            setSelectedWaits((prev) => [...prev, tile]);
         }
     };
 
@@ -75,7 +86,7 @@ export default function TrainingScreen() {
         <SafeAreaView className="flex-1 bg-gray-900">
             <Stack.Screen
                 options={{
-                    title: 'Training Mode',
+                    title: "Training Mode",
                     headerLeft: () => <CustomBackButton />,
                 }}
             />
@@ -91,7 +102,7 @@ export default function TrainingScreen() {
                 />
 
                 <ActionButtons
-                    onOpenCheatSheet={() => setIsCheatSheetVisible(true)}
+                    onOpenCheatSheet={() => { setIsCheatSheetVisible(true); }}
                     onSubmit={handleSubmit}
                     onSkip={startNewGame}
                     isCorrect={isCorrect}
@@ -107,7 +118,7 @@ export default function TrainingScreen() {
 
             <CheatsheetModal
                 visible={isCheatSheetVisible}
-                onClose={() => setIsCheatSheetVisible(false)}
+                onClose={() => { setIsCheatSheetVisible(false); }}
                 correctWaits={gameState.correctWaits}
             />
         </SafeAreaView>

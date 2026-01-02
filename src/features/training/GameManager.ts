@@ -1,16 +1,21 @@
 import {
     HaiKind,
     HaiKindId,
-    Tehai,
     calculateShanten,
     getUkeire,
 } from "@pai-forge/riichi-mahjong";
 
 // Only Manzu for now (Chinitsu training)
 const MANZU_TILES = [
-    HaiKind.ManZu1, HaiKind.ManZu2, HaiKind.ManZu3,
-    HaiKind.ManZu4, HaiKind.ManZu5, HaiKind.ManZu6,
-    HaiKind.ManZu7, HaiKind.ManZu8, HaiKind.ManZu9,
+    HaiKind.ManZu1,
+    HaiKind.ManZu2,
+    HaiKind.ManZu3,
+    HaiKind.ManZu4,
+    HaiKind.ManZu5,
+    HaiKind.ManZu6,
+    HaiKind.ManZu7,
+    HaiKind.ManZu8,
+    HaiKind.ManZu9,
 ];
 
 // Map HaiKindId to number (1-9) for answering
@@ -52,10 +57,18 @@ export function generateProblem(): GameState {
 
     // Fallback (simple hand) if generation fails
     const fallbackHand = [
-        HaiKind.ManZu1, HaiKind.ManZu1, HaiKind.ManZu1,
-        HaiKind.ManZu2, HaiKind.ManZu3, HaiKind.ManZu4,
-        HaiKind.ManZu5, HaiKind.ManZu6, HaiKind.ManZu7,
-        HaiKind.ManZu8, HaiKind.ManZu9, HaiKind.ManZu9,
+        HaiKind.ManZu1,
+        HaiKind.ManZu1,
+        HaiKind.ManZu1,
+        HaiKind.ManZu2,
+        HaiKind.ManZu3,
+        HaiKind.ManZu4,
+        HaiKind.ManZu5,
+        HaiKind.ManZu6,
+        HaiKind.ManZu7,
+        HaiKind.ManZu8,
+        HaiKind.ManZu9,
+        HaiKind.ManZu9,
         HaiKind.ManZu9,
     ];
     return {
@@ -82,7 +95,10 @@ function generateRandomHand13(): HaiKindId[] {
 /**
  * Check if the user's selected waits match the correct waits exactly.
  */
-export function checkAnswer(selectedWaits: HaiKindId[], correctWaits: HaiKindId[]): boolean {
+export function checkAnswer(
+    selectedWaits: readonly HaiKindId[],
+    correctWaits: readonly HaiKindId[],
+): boolean {
     if (selectedWaits.length !== correctWaits.length) return false;
 
     const sortedSelected = [...selectedWaits].sort((a, b) => a - b);
