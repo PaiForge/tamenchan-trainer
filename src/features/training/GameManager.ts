@@ -4,7 +4,7 @@ import {
     Tehai,
     calculateShanten,
     getUkeire,
-} from "riichi-mahjong";
+} from "@pai-forge/riichi-mahjong";
 
 // Only Manzu for now (Chinitsu training)
 const MANZU_TILES = [
