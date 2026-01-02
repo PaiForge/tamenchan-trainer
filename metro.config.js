@@ -19,4 +19,9 @@ config.resolver.nodeModulesPaths = [
 // 3. Force Metro to resolve (sub)dependencies only from the `nodeModulesPaths`
 config.resolver.disableHierarchicalLookup = true;
 
+// 4. Force resolution of local packages to their source
+config.resolver.extraNodeModules = {
+  'mahjong-react-ui': path.resolve(workspaceRoot, 'mahjong-react-ui'),
+};
+
 module.exports = config;
