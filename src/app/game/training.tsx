@@ -4,8 +4,8 @@ import { Stack, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Hai } from '@pai-forge/mahjong-react-ui';
 import { HaiKind, type HaiKindId } from '@pai-forge/riichi-mahjong';
-import { generateProblem, checkAnswer, GameState, tileToNumber } from '../../src/features/training/GameManager';
-import { CheatsheetModal } from '../../src/components/CheatsheetModal';
+import { generateProblem, checkAnswer, GameState, tileToNumber } from '../../features/training/GameManager';
+import { CheatsheetModal } from '../../components/CheatsheetModal';
 
 export default function TrainingScreen() {
     const [gameState, setGameState] = useState<GameState | null>(null);
