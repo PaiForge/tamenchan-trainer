@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Pressable, SafeAreaView, useWindowDimensions } from 'react-native';
 import { Stack, router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { Hai } from '@pai-forge/mahjong-react-ui';
 import { HaiKind, type HaiKindId } from '@pai-forge/riichi-mahjong';
 import { generateProblem, checkAnswer, GameState, tileToNumber } from '../../src/features/training/GameManager';
@@ -89,11 +90,12 @@ export default function TrainingScreen() {
             <Stack.Screen
                 options={{
                     title: 'Training Mode',
-                    headerRight: () => (
-                        <Pressable onPress={() => router.replace('/')}>
-                            <Text style={{ color: '#ef4444', fontSize: 16, fontWeight: 'bold' }}>終了</Text>
+                    headerLeft: () => (
+                        <Pressable onPress={() => router.replace('/')} style={{ marginLeft: 8, padding: 4 }}>
+                            <Ionicons name="chevron-back" size={28} color="#007AFF" />
                         </Pressable>
                     ),
+
                 }}
             />
 
