@@ -15,24 +15,24 @@ import { CustomBackButton } from "./_components/CustomBackButton";
 import { GameStatus } from "./_components/GameStatus";
 import { AnswerInput } from "./_components/AnswerInput";
 import { ActionButtons } from "./_components/ActionButtons";
-import { HandDisplay } from "./_components/HandDisplay";
+import { TehaiDisplay } from "./_components/TehaiDisplay";
 
 /**
  *
  */
 export default function TrainingScreen() {
     const [gameState, setGameState] = useState<GameState | null>(null);
-    const [selectedWaits, setSelectedWaits] = useState<HaiKindId[]>([]);
+    const [selectedMachi, setSelectedMachi] = useState<HaiKindId[]>([]);
     const [isCheatSheetVisible, setIsCheatSheetVisible] = useState(false);
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
     const { width: screenWidth, height: screenHeight } = useWindowDimensions();
     const isPortrait = screenHeight > screenWidth;
 
-    const HAND_PADDING = 32; // 16 * 2
-    const TILE_GAP = 2;
-    const NUM_TILES = 13;
-    const TOTAL_GAPS_WIDTH = TILE_GAP * (NUM_TILES - 1);
-    const AVAILABLE_WIDTH = screenWidth - HAND_PADDING;
+    const TEHAI_PADDING = 32; // 16 * 2
+    const HAI_GAP = 2;
+    const NUM_HAIS = 13;
+    const TOTAL_GAPS_WIDTH = HAI_GAP * (NUM_HAIS - 1);
+    const AVAILABLE_WIDTH = screenWidth - TEHAI_PADDING;
 
     // Configurable base size for 'lg' (56x78) or 'md' (44x62)
     // We want to target 'lg' size (56px) if possible, but shrink if needed.
@@ -42,7 +42,7 @@ export default function TrainingScreen() {
     // Calculate optimal width to fit 13 tiles
     const calculatedTileWidth = Math.min(
         MAX_TILE_WIDTH,
-        (AVAILABLE_WIDTH - TOTAL_GAPS_WIDTH) / NUM_TILES,
+        (AVAILABLE_WIDTH - TOTAL_GAPS_WIDTH) / NUM_HAIS,
     );
     const scaleFactor = calculatedTileWidth / MAX_TILE_WIDTH;
     const calculatedTileHeight = MAX_TILE_HEIGHT * scaleFactor;
@@ -54,23 +54,23 @@ export default function TrainingScreen() {
 
     const startNewGame = () => {
         setGameState(generateProblem());
-        setSelectedWaits([]);
+        setSelectedMachi([]);
         setIsCorrect(null);
     };
 
-    const toggleWait = (tile: HaiKindId) => {
+    const toggleMachi = (hai: HaiKindId) => {
         if (isCorrect) return; // Disable input if already answered correctly
 
-        if (selectedWaits.includes(tile)) {
-            setSelectedWaits((prev) => prev.filter((t) => t !== tile));
+        if (selectedMachi.includes(hai)) {
+            setSelectedMachi((prev) => prev.filter((t) => t !== hai));
         } else {
-            setSelectedWaits((prev) => [...prev, tile]);
+            setSelectedMachi((prev) => [...prev, hai]);
         }
     };
 
     const handleSubmit = () => {
         if (!gameState) return;
-        const correct = checkAnswer(selectedWaits, gameState.correctWaits);
+        const correct = checkAnswer(selectedMachi, gameState.machi);
         setIsCorrect(correct);
 
         if (correct) {
@@ -96,8 +96,8 @@ export default function TrainingScreen() {
                 <GameStatus isCorrect={isCorrect} />
 
                 <AnswerInput
-                    selectedWaits={selectedWaits}
-                    onToggleWait={toggleWait}
+                    selectedMachi={selectedMachi}
+                    onToggleMachi={toggleMachi}
                     isPortrait={isPortrait}
                     suit={gameState.suit}
                 />
@@ -111,8 +111,8 @@ export default function TrainingScreen() {
             </View>
 
             {/* Hand Display (Fixed at bottom) */}
-            <HandDisplay
-                hand={gameState.hand}
+            <TehaiDisplay
+                tehai={gameState.tehai}
                 calculatedTileWidth={calculatedTileWidth}
                 calculatedTileHeight={calculatedTileHeight}
             />
@@ -120,7 +120,7 @@ export default function TrainingScreen() {
             <CheatsheetModal
                 visible={isCheatSheetVisible}
                 onClose={() => { setIsCheatSheetVisible(false); }}
-                correctWaits={gameState.correctWaits}
+                machi={gameState.machi}
             />
         </SafeAreaView>
     );

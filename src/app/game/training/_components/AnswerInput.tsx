@@ -4,33 +4,33 @@ import { Hai } from "@pai-forge/mahjong-react-ui";
 import { HaiKindId, HaiType } from "@pai-forge/riichi-mahjong";
 import { Suupai } from "../../../../types";
 import {
-  MANZU_TILES,
-  PINZU_TILES,
-  SOUZU_TILES,
+  MANZU_HAIS,
+  PINZU_HAIS,
+  SOUZU_HAIS,
 } from "../../../../features/training/GameManager";
 
 interface AnswerInputProps {
-  readonly selectedWaits: readonly HaiKindId[];
-  readonly onToggleWait: (tile: HaiKindId) => void;
+  readonly selectedMachi: readonly HaiKindId[];
+  readonly onToggleMachi: (hai: HaiKindId) => void;
   readonly isPortrait: boolean;
   readonly suit: Suupai;
 }
 
 /**
- *
+ * 待ち牌を選択する入力コンポーネント
  */
 export function AnswerInput({
-  selectedWaits,
-  onToggleWait,
+  selectedMachi,
+  onToggleMachi,
   isPortrait,
   suit,
 }: Readonly<AnswerInputProps>) {
-  const answerOptions =
+  const targetHais =
     suit === HaiType.Manzu
-      ? MANZU_TILES
+      ? MANZU_HAIS
       : suit === HaiType.Pinzu
-        ? PINZU_TILES
-        : SOUZU_TILES;
+        ? PINZU_HAIS
+        : SOUZU_HAIS;
 
   // Layout constants
   const OPTION_TILE_WIDTH = 44; // md size
@@ -54,13 +54,13 @@ export function AnswerInput({
             : { width: "auto", flexWrap: "nowrap" }
         }
       >
-        {answerOptions.map((tile) => {
-          const isSelected = selectedWaits.includes(tile);
+        {targetHais.map((hai) => {
+          const isSelected = selectedMachi.includes(hai);
           return (
             <Pressable
-              key={tile}
+              key={hai}
               onPress={() => {
-                onToggleWait(tile);
+                onToggleMachi(hai);
               }}
               hitSlop={10}
               className="p-0.5 rounded border-2 relative items-center justify-center"
@@ -72,7 +72,7 @@ export function AnswerInput({
             >
               {/* Wrap Hai in View with pointerEvents="none" to prevent it from stealing touches */}
               <View pointerEvents="none">
-                <Hai hai={tile} size="md" />
+                <Hai hai={hai} size="md" />
               </View>
 
               {isSelected && (

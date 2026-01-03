@@ -6,7 +6,7 @@ import type { HaiKindId } from "@pai-forge/riichi-mahjong";
 interface CheatsheetModalProps {
     readonly visible: boolean;
     readonly onClose: () => void;
-    readonly correctWaits: readonly HaiKindId[];
+    readonly machi: readonly HaiKindId[];
 }
 
 /**
@@ -15,7 +15,7 @@ interface CheatsheetModalProps {
 export function CheatsheetModal({
     visible,
     onClose,
-    correctWaits,
+    machi,
 }: Readonly<CheatsheetModalProps>) {
     return (
         <Modal
@@ -29,7 +29,7 @@ export function CheatsheetModal({
                     <Text style={styles.modalTitle}>正解（待ち牌）</Text>
 
                     <View style={styles.tilesContainer}>
-                        {correctWaits.map((tile, index) => (
+                        {machi.map((tile, index) => (
                             <Hai key={index} hai={tile} size="lg" />
                         ))}
                     </View>
