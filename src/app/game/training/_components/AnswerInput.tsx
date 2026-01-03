@@ -1,12 +1,19 @@
 import React from "react";
 import { View, Text, Pressable } from "react-native";
 import { Hai } from "@pai-forge/mahjong-react-ui";
-import { HaiKind, HaiKindId } from "@pai-forge/riichi-mahjong";
+import { HaiKindId, HaiType } from "@pai-forge/riichi-mahjong";
+import { Suupai } from "../../../../types";
+import {
+  MANZU_TILES,
+  PINZU_TILES,
+  SOUZU_TILES,
+} from "../../../../features/training/GameManager";
 
 interface AnswerInputProps {
   readonly selectedWaits: readonly HaiKindId[];
   readonly onToggleWait: (tile: HaiKindId) => void;
   readonly isPortrait: boolean;
+  readonly suit: Suupai;
 }
 
 /**
@@ -16,18 +23,14 @@ export function AnswerInput({
   selectedWaits,
   onToggleWait,
   isPortrait,
+  suit,
 }: Readonly<AnswerInputProps>) {
-  const answerOptions = [
-    HaiKind.ManZu1,
-    HaiKind.ManZu2,
-    HaiKind.ManZu3,
-    HaiKind.ManZu4,
-    HaiKind.ManZu5,
-    HaiKind.ManZu6,
-    HaiKind.ManZu7,
-    HaiKind.ManZu8,
-    HaiKind.ManZu9,
-  ];
+  const answerOptions =
+    suit === HaiType.Manzu
+      ? MANZU_TILES
+      : suit === HaiType.Pinzu
+        ? PINZU_TILES
+        : SOUZU_TILES;
 
   // Layout constants
   const OPTION_TILE_WIDTH = 44; // md size

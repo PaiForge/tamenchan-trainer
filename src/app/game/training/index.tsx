@@ -99,6 +99,7 @@ export default function TrainingScreen() {
                     selectedWaits={selectedWaits}
                     onToggleWait={toggleWait}
                     isPortrait={isPortrait}
+                    suit={gameState.suit}
                 />
 
                 <ActionButtons
