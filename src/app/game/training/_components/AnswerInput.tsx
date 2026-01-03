@@ -51,21 +51,33 @@ export function AnswerInput({
             : { width: "auto", flexWrap: "nowrap" }
         }
       >
-        {answerOptions.map((tile) => (
-          <Pressable
-            key={tile}
-            onPress={() => { onToggleWait(tile); }}
-            className={`p-0.5 rounded border-2 relative ${selectedWaits.includes(tile)
-                ? "border-blue-500 bg-blue-500/20"
-                : "border-transparent"
-              }`}
-          >
-            <Hai hai={tile} size="md" />
-            {selectedWaits.includes(tile) && (
-              <View className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-blue-500" />
-            )}
-          </Pressable>
-        ))}
+        {answerOptions.map((tile) => {
+          const isSelected = selectedWaits.includes(tile);
+          return (
+            <Pressable
+              key={tile}
+              onPress={() => {
+                onToggleWait(tile);
+              }}
+              hitSlop={10}
+              className="p-0.5 rounded border-2 relative items-center justify-center"
+              style={{
+                opacity: isSelected ? 1.0 : 0.5,
+                borderColor: isSelected ? "#3b82f6" : "transparent",
+                backgroundColor: isSelected ? "rgba(59, 130, 246, 0.2)" : "transparent",
+              }}
+            >
+              {/* Wrap Hai in View with pointerEvents="none" to prevent it from stealing touches */}
+              <View pointerEvents="none">
+                <Hai hai={tile} size="md" />
+              </View>
+
+              {isSelected && (
+                <View className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-blue-500" />
+              )}
+            </Pressable>
+          );
+        })}
       </View>
     </View>
   );
