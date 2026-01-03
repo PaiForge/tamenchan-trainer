@@ -9,6 +9,7 @@ import {
     GameState,
 } from "../../../features/training/GameManager";
 import { CheatsheetModal } from "../../../components/CheatsheetModal";
+import { useSettings } from "../../../features/settings/SettingsContext";
 
 // Components
 import { CustomBackButton } from "./_components/CustomBackButton";
@@ -21,6 +22,7 @@ import { TehaiDisplay } from "./_components/TehaiDisplay";
  *
  */
 export default function TrainingScreen() {
+    const { preferredSuit } = useSettings();
     const [gameState, setGameState] = useState<GameState | null>(null);
     const [selectedMachi, setSelectedMachi] = useState<HaiKindId[]>([]);
     const [isCheatSheetVisible, setIsCheatSheetVisible] = useState(false);
@@ -53,7 +55,8 @@ export default function TrainingScreen() {
     }, []);
 
     const startNewGame = () => {
-        setGameState(generateProblem());
+        const suit = preferredSuit === "random" ? undefined : preferredSuit;
+        setGameState(generateProblem(suit));
         setSelectedMachi([]);
         setIsCorrect(null);
     };
@@ -80,10 +83,10 @@ export default function TrainingScreen() {
         }
     };
 
-    if (!gameState) return <View className="flex-1 bg-gray-900" />;
+    if (!gameState) return <View className="flex-1 bg-background" />;
 
     return (
-        <SafeAreaView className="flex-1 bg-gray-900">
+        <SafeAreaView className="flex-1 bg-background">
             <Stack.Screen
                 options={{
                     title: "Training Mode",

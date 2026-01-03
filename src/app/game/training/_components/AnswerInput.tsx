@@ -43,7 +43,7 @@ export function AnswerInput({
 
   return (
     <View className="px-4 items-center mb-10">
-      <Text className="text-gray-400 mb-4 text-base">
+      <Text className="text-text-muted mb-4 text-base">
         待ち牌をすべて選択してください
       </Text>
       <View
@@ -63,11 +63,13 @@ export function AnswerInput({
                 onToggleMachi(hai);
               }}
               hitSlop={10}
-              className="p-0.5 rounded border-2 relative items-center justify-center"
+              className={`p-0.5 rounded border-2 relative items-center justify-center ${isSelected
+                  ? "border-primary bg-primary/20" // Use Tailwind utility classes for basic state
+                  : "border-transparent bg-transparent"
+                }`}
               style={{
                 opacity: isSelected ? 1.0 : 0.5,
-                borderColor: isSelected ? "#3b82f6" : "transparent",
-                backgroundColor: isSelected ? "rgba(59, 130, 246, 0.2)" : "transparent",
+                // We rely on className for colors now, but keep opacity style for convenience
               }}
             >
               {/* Wrap Hai in View with pointerEvents="none" to prevent it from stealing touches */}
@@ -76,7 +78,7 @@ export function AnswerInput({
               </View>
 
               {isSelected && (
-                <View className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-blue-500" />
+                <View className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-primary" />
               )}
             </Pressable>
           );

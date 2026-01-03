@@ -20,11 +20,11 @@ export function ActionButtons({
   return (
     <View className="flex-row justify-around items-center px-6 pb-6">
       <Pressable className="p-3" onPress={onOpenCheatSheet}>
-        <Text className="text-gray-400 underline">答えを見る</Text>
+        <Text className="text-text-muted underline">答えを見る</Text>
       </Pressable>
 
       <Pressable
-        className={`py-3.5 px-8 rounded-lg min-w-[140px] items-center ${isCorrect ? "bg-gray-700" : "bg-blue-500"
+        className={`py-3.5 px-8 rounded-lg min-w-[140px] items-center ${isCorrect ? "bg-surface" : "bg-primary"
           }`}
         onPress={onSubmit}
         disabled={isCorrect === true}

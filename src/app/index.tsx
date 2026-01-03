@@ -1,79 +1,55 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import React, { useState } from "react";
+import { View, Text, Pressable } from "react-native";
 import { router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { SettingsModal } from "../components/SettingsModal";
 
 /**
  *
  */
 export default function HomeScreen() {
+  const [isSettingsVisible, setSettingsVisible] = useState(false);
+
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Tamenchan</Text>
-        <Text style={styles.subtitle}>Trainer</Text>
+    <View className="flex-1 bg-background items-center justify-center p-6 relative">
+      {/* Settings Button */}
+      <Pressable
+        className="absolute top-12 right-6 p-2 rounded-full active:bg-surface"
+        onPress={() => {
+          setSettingsVisible(true);
+        }}
+      >
+        <Ionicons name="settings-sharp" size={28} color="#9ca3af" />
+      </Pressable>
+
+      <View className="items-center mb-16">
+        <Text className="text-[42px] font-bold text-text tracking-widest">
+          Tamenchan
+        </Text>
+        <Text className="text-2xl text-text-muted tracking-[4px] -mt-1">
+          Trainer
+        </Text>
       </View>
 
-      <View style={styles.actions}>
+      <View className="w-full max-w-[300px]">
         <Pressable
-          style={({ pressed }) => [
-            styles.startButton,
-            pressed && styles.startButtonPressed,
-          ]}
-          onPress={() => { router.push("/game/training"); }}
+          className="bg-primary py-[18px] rounded-xl items-center shadow-lg active:bg-primary-dark active:scale-[0.98]"
+          onPress={() => {
+            router.push("/game/training");
+          }}
         >
-          <Text style={styles.startButtonText}>Start Training</Text>
+          <Text className="text-white text-lg font-bold tracking-widest">
+            Start Training
+          </Text>
         </Pressable>
       </View>
+
+      <SettingsModal
+        visible={isSettingsVisible}
+        onClose={() => {
+          setSettingsVisible(false);
+        }}
+      />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#111827", // gray-900
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 24,
-  },
-  header: {
-    marginBottom: 64, // Increased spacing since decoration is gone
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 42,
-    fontWeight: "bold",
-    color: "#fff",
-    letterSpacing: 2,
-  },
-  subtitle: {
-    fontSize: 24,
-    color: "#9ca3af", // gray-400
-    letterSpacing: 4,
-    marginTop: -4,
-  },
-  actions: {
-    width: "100%",
-    maxWidth: 300,
-  },
-  startButton: {
-    backgroundColor: "#0d9488", // teal-600
-    paddingVertical: 18,
-    borderRadius: 12,
-    alignItems: "center",
-    shadowColor: "#0f766e",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 8,
-  },
-  startButtonPressed: {
-    backgroundColor: "#0f766e", // teal-700
-    transform: [{ scale: 0.98 }],
-  },
-  startButtonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-    letterSpacing: 1,
-  },
-});

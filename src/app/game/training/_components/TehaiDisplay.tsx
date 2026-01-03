@@ -18,7 +18,7 @@ export function TehaiDisplay({
   calculatedTileHeight,
 }: Readonly<TehaiDisplayProps>) {
   return (
-    <View className="py-5 px-4 bg-gray-800 border-t border-gray-700 items-center">
+    <View className="py-5 px-4 bg-surface border-t border-border items-center">
       <View className="flex-row flex-nowrap justify-center gap-[2px]">
         {tehai.map((tile, index) => (
           <Hai
