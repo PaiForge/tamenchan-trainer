@@ -39,7 +39,7 @@ export default function HomeScreen() {
           }}
         >
           <Text className="text-white text-lg font-bold tracking-widest">
-            Start Training
+            1112型
           </Text>
         </Pressable>
       </View>

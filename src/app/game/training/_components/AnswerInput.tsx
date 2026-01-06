@@ -7,7 +7,7 @@ import {
   MANZU_HAIS,
   PINZU_HAIS,
   SOUZU_HAIS,
-} from "../../../../features/training/GameManager";
+} from "../../../../constants";
 
 interface AnswerInputProps {
   readonly selectedMachi: readonly HaiKindId[];
@@ -64,8 +64,8 @@ export function AnswerInput({
               }}
               hitSlop={10}
               className={`p-0.5 rounded border-2 relative items-center justify-center ${isSelected
-                  ? "border-primary bg-primary/20" // Use Tailwind utility classes for basic state
-                  : "border-transparent bg-transparent"
+                ? "border-primary bg-primary/20" // Use Tailwind utility classes for basic state
+                : "border-transparent bg-transparent"
                 }`}
               style={{
                 opacity: isSelected ? 1.0 : 0.5,
