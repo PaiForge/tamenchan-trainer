@@ -5,10 +5,9 @@ import { PatternId } from "../types";
  */
 export const PATTERN_RELATIONSHIPS: Record<PatternId, { supersets: string[] }> =
   {
-    "1112": {
-      // "1112" (4枚形) の上位形として "1233334" (7枚形) などを定義
-      // ※現時点では PatternId 型に含まれないパターン文字列も許容するために string[] としているが、
-      // 将来的に全て型安全にするのが望ましい。
-      supersets: ["1233334"],
+    "31": {
+      // 313型: 1112333 (1,3,4待ち) や 2223444 (1,4待ち) など
+      // 待ちが増える、あるいは構造的に上位となる形を排除する
+      supersets: ["313"],
     },
   };

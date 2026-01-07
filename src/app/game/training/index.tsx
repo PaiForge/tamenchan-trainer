@@ -4,10 +4,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, router } from "expo-router";
 import { HaiKindId } from "@pai-forge/riichi-mahjong";
 import {
-  generateProblem,
+  generateProblemSet,
   checkAnswer,
   GameState,
-  ProblemConfig,
 } from "../../../features/training/GameManager";
 import { CheatsheetModal } from "../../../components/CheatsheetModal";
 
@@ -31,7 +30,7 @@ export default function TrainingScreen() {
   const isPortrait = screenHeight > screenWidth;
 
   // Game Flow State
-  const [questionQueue, setQuestionQueue] = useState<ProblemConfig[]>([]);
+  const [problemPool, setProblemPool] = useState<GameState[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
 
@@ -60,70 +59,24 @@ export default function TrainingScreen() {
   }, []);
 
   const startNewGameFlow = () => {
-    // Generate Question Queue
-    const queue: ProblemConfig[] = [];
-
-    // 2x Penchan
-    queue.push({
-      patternId: "1112",
-      requirePenchan: true,
+    // Generate mixed problem set (1 Interference, 2 Penchan, 7 Normal)
+    // The internal logic of generateProblemSet handles the distribution when count >= 10.
+    const pool = generateProblemSet(10, {
+      patternId: "31", // Base config (ignored internally for mixed generation logic)
+      requirePenchan: false,
       requireInterference: false,
     });
-    queue.push({
-      patternId: "1112",
-      requirePenchan: true,
-      requireInterference: false,
-    });
-    // 2x Interference
-    queue.push({
-      patternId: "1112",
-      requirePenchan: false,
-      requireInterference: true,
-    });
-    queue.push({
-      patternId: "1112",
-      requirePenchan: false,
-      requireInterference: true,
-    });
-    // 6x Normal
-    for (let i = 0; i < 6; i++) {
-      queue.push({
-        patternId: "1112",
-        requirePenchan: false,
-        requireInterference: false,
-      });
-    }
 
-    // Shuffle
-    for (let i = queue.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [queue[i], queue[j]] = [queue[j], queue[i]];
-    }
-
-    setQuestionQueue(queue);
+    setProblemPool(pool);
     setCurrentIndex(0);
     setIsFinished(false);
-    setGameState(null); // Reset state
-
-    // Load first question immediately
-    loadQuestion(queue[0]);
-  };
-
-  const loadQuestion = (config: Readonly<ProblemConfig>) => {
-    // Use preferred settings for suit if set, otherwise random logic inside GameManager handles it
-    // Note: generateProblem now accepts ProblemConfig. To support fixed patterns + random suit/force suit logic properly,
-    // we might need to adjust GameManager, but for now ProblemConfig implies "Suit" is random unless we extend it.
-    // Current generateProblem implementation handles suit randomness internally if not specified.
-    // However, we want to respect `preferredSuit`.
-    // To do this, we need to adapt checking preferredSuit logic here, but generateProblem(config) doesn't take 'suit'.
-    // Let's assume suit is random for now as per "1112型" training, or we can improve GameManager later.
-    // *Correction*: generateProblem logic chooses suit randomly internally. Ideally we pass it.
-    // For this task, we'll let GameManager decide the suit randomly.
-
-    setGameState(generateProblem(config));
+    setGameState(pool[0]); // Load first
     setSelectedMachi([]);
     setIsCorrect(null);
   };
+
+  // Removed loadQuestion as we pre-generate problems.
+  // const loadQuestion = ...
 
   const toggleMachi = (hai: HaiKindId) => {
     if (isCorrect) return; // Disable input if already answered correctly
@@ -143,9 +96,11 @@ export default function TrainingScreen() {
     if (correct) {
       setTimeout(() => {
         const nextIndex = currentIndex + 1;
-        if (nextIndex < questionQueue.length) {
+        if (nextIndex < problemPool.length) {
           setCurrentIndex(nextIndex);
-          loadQuestion(questionQueue[nextIndex]);
+          setGameState(problemPool[nextIndex]);
+          setSelectedMachi([]);
+          setIsCorrect(null);
         } else {
           setIsFinished(true);
         }
@@ -207,13 +162,13 @@ export default function TrainingScreen() {
           }}
           onSubmit={handleSubmit}
           onSkip={() => {
-            // Skip logic: Treat as correct (or just move next)
-            // For training, let's just move next with delay to show answer?
-            // Or just instant next. Let's do instant next for flow.
+            // Skip logic: Instant next
             const nextIndex = currentIndex + 1;
-            if (nextIndex < questionQueue.length) {
+            if (nextIndex < problemPool.length) {
               setCurrentIndex(nextIndex);
-              loadQuestion(questionQueue[nextIndex]);
+              setGameState(problemPool[nextIndex]);
+              setSelectedMachi([]);
+              setIsCorrect(null);
             } else {
               setIsFinished(true);
             }

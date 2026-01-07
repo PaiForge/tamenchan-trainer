@@ -5,10 +5,8 @@ import {
   getUkeire,
 } from "@pai-forge/riichi-mahjong";
 import { Suupai } from "../../types";
-import { MANZU_HAIS, PINZU_HAIS, SOUZU_HAIS } from "../../constants";
-import { generateHand } from "./logic/PatternGenerator";
 import { PatternId, SUPPORTED_PATTERNS } from "./types";
-import { getIdealWaitCount } from "./logic/PatternDetector";
+import { Strategies } from "./logic/GenerationStrategy";
 
 /**
  * 牌種IDを回答用の数値 (1-9) に変換する
@@ -52,7 +50,7 @@ export function generateProblem(
   let problemConfig: ProblemConfig;
 
   if (!config || typeof config === "string") {
-    // Default behavior: Random supported pattern, strict mode
+    // Default behavior: Random supported pattern
     const patternId =
       SUPPORTED_PATTERNS[Math.floor(Math.random() * SUPPORTED_PATTERNS.length)];
     problemConfig = {
@@ -60,12 +58,6 @@ export function generateProblem(
       requireInterference: false,
       requirePenchan: false,
     };
-    // If forceSuit is provided (legacy arg), we honor it later
-    if (typeof config === "string") {
-      // We can't actually store forceSuit in ProblemConfig easily unless we expand it.
-      // But the original loop logic handled forceSuit.
-      // We'll handle targetSuit logic below.
-    }
   } else {
     problemConfig = config;
   }
@@ -83,301 +75,131 @@ export function generateProblem(
     else targetSuit = HaiType.Souzu;
   }
 
-  const haiSet =
-    targetSuit === HaiType.Manzu
-      ? MANZU_HAIS
-      : targetSuit === HaiType.Pinzu
-        ? PINZU_HAIS
-        : SOUZU_HAIS;
+  // Strategy Execution
+  const strategy = Strategies[problemConfig.patternId];
+  let coreTiles: HaiKindId[] = [];
 
-  // All available tiles for random filling (including honors)
-  const allGenericTiles: HaiKindId[] = [
-    ...MANZU_HAIS,
-    ...PINZU_HAIS,
-    ...SOUZU_HAIS,
-    HaiKind.Ton,
-    HaiKind.Nan,
-    HaiKind.Sha,
-    HaiKind.Pei,
-    HaiKind.Haku,
-    HaiKind.Hatsu,
-    HaiKind.Chun,
-  ];
-
-  let attempts = 0;
-  while (attempts < 1000) {
-    attempts++;
-
-    // 1. Generate Core Pattern
-    const coreNumbers = generateHand(problemConfig.patternId);
-    const coreTiles = coreNumbers.map((n) => haiSet[n - 1]);
-
-    // 2. Calculate Core Waits (Ideal State with Padding)
-    // Pad with isolated honors to reach 13 tiles for exact checking
-    const paddingTiles = [
-      HaiKind.Ton,
-      HaiKind.Ton,
-      HaiKind.Ton,
-      HaiKind.Nan,
-      HaiKind.Nan,
-      HaiKind.Nan,
-      HaiKind.Sha,
-      HaiKind.Sha,
-      HaiKind.Sha,
-    ];
-    // Ensure enough padding (core is usually 4-7 tiles)
-    const checkTehai = [...coreTiles, ...paddingTiles].slice(0, 13);
-
-    const coreUkeire = getUkeire({ closed: checkTehai, exposed: [] });
-    const coreWaitIds = coreUkeire
-      .filter((id) => id >= haiSet[0] && id <= haiSet[8]) // Filter to target suit only
-      .sort((a, b) => a - b);
-
-    // Penchan Check (Wait Count)
-    const idealCount = getIdealWaitCount(problemConfig.patternId);
-    if (idealCount > 0) {
-      // requirePenchan=false (Default) -> Only allow Ideal (Max) waits
-      if (!problemConfig.requirePenchan && coreWaitIds.length < idealCount) {
-        continue;
-      }
-      // requirePenchan=true -> Only allow Non-Ideal (Penchan/Edge) waits (Strict)
-      if (problemConfig.requirePenchan && coreWaitIds.length >= idealCount) {
-        continue;
-      }
-    }
-
-    // 3. Fill Remaining Tiles (Realistic Random)
-    let currentTehai = [...coreTiles];
-    let validFill = true;
-
-    // Try to add random melds until 13
-    while (currentTehai.length < 13) {
-      const needed = 13 - currentTehai.length;
-      if (needed < 3) {
-        validFill = false;
-        break;
-      }
-
-      // If requiring interference, bias towards the target suit to increase collision chance
-      const biasSuit = problemConfig.requireInterference
-        ? targetSuit
-        : undefined;
-      const meld = generateRealRandomMeld(allGenericTiles, biasSuit);
-      // Validation: Count check (using temp array)
-      const tempTehai = [...currentTehai, ...meld];
-      if (!validateTileCount(tempTehai)) {
-        validFill = false;
-        break;
-      }
-      currentTehai = tempTehai;
-    }
-
-    if (!validFill) continue;
-
-    // 4. Strict Simulation Verification
-    const actualUkeire = getUkeire({ closed: currentTehai, exposed: [] });
-
-    // Compare Sets
-    const coreSet = new Set(coreWaitIds);
-    const actualSet = new Set(actualUkeire);
-
-    const missing = coreWaitIds.filter((x) => !actualSet.has(x));
-    const extras = actualUkeire.filter((x) => !coreSet.has(x));
-
-    const isInterference = missing.length > 0;
-    const isSuperset = extras.length > 0;
-
-    if (isSuperset) {
-      // Generally reject supersets (wait expansion) to keep pattern focus
-      // But if requiring interference (blocking waits), we allow expansion IF we blocked something
-      if (problemConfig.requireInterference && isInterference) {
-        // Allowed: Complex transformation (some blocked, some added)
-      } else {
-        continue;
-      }
-    }
-
-    if (isInterference) {
-      // requireInterference=false (Default) -> Ban interference
-      if (!problemConfig.requireInterference) {
-        continue;
-      }
-    } else {
-      // requireInterference=true -> Require interference (Must have missing waits)
-      if (problemConfig.requireInterference) {
-        continue;
-      }
-    }
-
-    // Found a valid problem!
-    return {
-      tehai: currentTehai.sort((a, b) => a - b),
-      tsumo: null,
-      machi: actualUkeire,
-      suit: targetSuit,
-    };
-  }
-
-  // Fallback logic
-
-  // Default valid fallback (6667 + Honors)
-  let fallbackTehai: HaiKindId[] = [
-    haiSet[5],
-    haiSet[5],
-    haiSet[5],
-    haiSet[6],
-    HaiKind.Ton,
-    HaiKind.Ton,
-    HaiKind.Ton,
-    HaiKind.Nan,
-    HaiKind.Nan,
-    HaiKind.Nan,
-    HaiKind.Sha,
-    HaiKind.Sha,
-    HaiKind.Sha,
-  ];
-
-  // Specialized Fallback for Interference (Guarantee valid return)
   if (problemConfig.requireInterference) {
-    // Construct 2223 (Manzu) + 444 (Manzu) + Honors
-    // This is a known interference pattern (2223 waits 1,3,4 -> +444 waits 2,5,7)
-    // Adjust suit based on targetSuit
-    const t1 = haiSet[1]; // 2
-    const t2 = haiSet[2]; // 3
-    const t3 = haiSet[3]; // 4
-    // 2223
-    const core = [t1, t1, t1, t2];
-    // 444
-    const inject = [t3, t3, t3];
+    coreTiles = strategy.generateInterference(targetSuit);
+  } else if (problemConfig.requirePenchan) {
+    coreTiles = strategy.generatePenchan(targetSuit);
+  } else {
+    coreTiles = strategy.generateNormal(targetSuit);
+  }
 
-    fallbackTehai = [
-      ...core,
-      ...inject,
-      HaiKind.Ton,
-      HaiKind.Ton,
-      HaiKind.Ton,
-      HaiKind.Nan,
-      HaiKind.Nan,
-      HaiKind.Nan,
-    ];
-  }
-  // Specialized Fallback for Penchan (AllowPenchan=true)
-  else if (problemConfig.requirePenchan) {
-    // 1112 + Honors
-    const t1 = haiSet[0];
-    const t2 = haiSet[1];
-    fallbackTehai = [
-      t1,
-      t1,
-      t1,
-      t2,
-      HaiKind.Ton,
-      HaiKind.Ton,
-      HaiKind.Ton,
-      HaiKind.Nan,
-      HaiKind.Nan,
-      HaiKind.Nan,
-      HaiKind.Sha,
-      HaiKind.Sha,
-      HaiKind.Sha,
-    ];
-  }
+  // Padding with Honors (Safe, Non-Interfering)
+  // Randomize by triplet groups to preserve Mentsu structure
+  const honorGroups = [
+    [HaiKind.Ton, HaiKind.Ton, HaiKind.Ton],
+    [HaiKind.Nan, HaiKind.Nan, HaiKind.Nan],
+    [HaiKind.Sha, HaiKind.Sha, HaiKind.Sha],
+    [HaiKind.Pei, HaiKind.Pei, HaiKind.Pei],
+    [HaiKind.Haku, HaiKind.Haku, HaiKind.Haku],
+    [HaiKind.Hatsu, HaiKind.Hatsu, HaiKind.Hatsu],
+    [HaiKind.Chun, HaiKind.Chun, HaiKind.Chun],
+  ];
+  honorGroups.sort(() => Math.random() - 0.5);
+  const paddingCandidates = honorGroups.flat();
+
+  const needed = 13 - coreTiles.length;
+  // Use what is needed
+  const padding = paddingCandidates.slice(0, needed);
+
+  const tehai = [...coreTiles, ...padding].sort((a, b) => a - b);
 
   return {
-    tehai: fallbackTehai.sort((a, b) => a - b),
+    tehai,
     tsumo: null,
-    machi: getUkeire({ closed: fallbackTehai, exposed: [] }),
+    machi: getUkeire({ closed: tehai, exposed: [] }),
     suit: targetSuit,
   };
 }
 
 /**
- * リアルなランダム面子を生成する
- * 全種類の牌から選ぶ
- * @param biasSuit 干渉を狙う場合など、特定のスートを優先的に選ぶ
+ * 複数の問題を一括生成し、重複を排除しバリエーションを確保する
  */
-function generateRealRandomMeld(
-  allTiles: readonly HaiKindId[],
-  biasSuit?: Suupai,
-): HaiKindId[] {
-  // 30% Honor Koutsu, 35% Suupai Koutsu, 35% Suupai Shuntsu
-  // If biasSuit is present, increase probability of Suupai matching biasSuit
-
-  let r = Math.random();
-
-  // Bias logic: If biasSuit is set, significantly reduce Honor rate and force suit
-  if (biasSuit) {
-    // 10% Honor, 90% Suupai (of biasSuit)
-    if (r < 0.1) {
-      // Honor path
-    } else {
-      // Force Suupai path
-      r = 0.5; // Ensure we go to else branch below
-    }
-  }
-
-  if (r < 0.3 && !biasSuit) {
-    // Disable high honor rate if biased
-    // Honor Koutsu
-    const honorTiles = [
-      HaiKind.Ton,
-      HaiKind.Nan,
-      HaiKind.Sha,
-      HaiKind.Pei,
-      HaiKind.Haku,
-      HaiKind.Hatsu,
-      HaiKind.Chun,
-    ];
-    const t = honorTiles[Math.floor(Math.random() * honorTiles.length)];
-    return [t, t, t];
-  } else {
-    // Suupai
-    // Pick a suit
-    let baseSet = MANZU_HAIS;
-
-    if (biasSuit) {
-      switch (biasSuit) {
-        case HaiType.Manzu:
-          baseSet = MANZU_HAIS;
-          break;
-        case HaiType.Pinzu:
-          baseSet = PINZU_HAIS;
-          break;
-        case HaiType.Souzu:
-          baseSet = SOUZU_HAIS;
-          break;
-      }
-    } else {
-      const suitType = Math.random();
-      if (suitType < 0.33) baseSet = PINZU_HAIS;
-      else if (suitType < 0.66) baseSet = SOUZU_HAIS;
-    }
-
-    if (r < 0.65) {
-      // Suupai Koutsu
-      const idx = Math.floor(Math.random() * 9);
-      const t = baseSet[idx];
-      return [t, t, t];
-    } else {
-      // Suupai Shuntsu
-      const idx = Math.floor(Math.random() * 7);
-      return [baseSet[idx], baseSet[idx + 1], baseSet[idx + 2]];
-    }
-  }
-}
-
 /**
- * 手牌の枚数制限（同種牌4枚以下）を検証する
- * TODO: このチェックは本来 riichi-mahjong 側で行うべき機能です
+ * 複数の問題を一括生成し、重複を排除しバリエーションを確保する
+ * 10問セットの場合: 干渉1, 辺張2, 通常7 の割合を目指す
  */
-function validateTileCount(tehai: readonly HaiKindId[]): boolean {
-  const counts = new Map<HaiKindId, number>();
-  for (const tile of tehai) {
-    const c = counts.get(tile) ?? 0;
-    if (c >= 4) return false;
-    counts.set(tile, c + 1);
+export function generateProblemSet(
+  count: number,
+  _config: Readonly<ProblemConfig>,
+): GameState[] {
+  const problems: GameState[] = [];
+  const generatedTehaiHashes = new Set<string>();
+
+  // Target counts
+  let interferenceCount = 0;
+  let penchanCount = 0;
+  let normalCount = 0;
+
+  if (count >= 10) {
+    interferenceCount = Math.floor(count / 10);
+    penchanCount = Math.floor(count / 10) * 2;
+    normalCount = count - interferenceCount - penchanCount;
+  } else {
+    // For small counts, prioritize variety if possible, but keep it simple
+    normalCount = count;
   }
-  return true;
+
+  const targets = [
+    { type: "interference", target: interferenceCount },
+    { type: "penchan", target: penchanCount },
+    { type: "normal", target: normalCount },
+  ];
+
+  for (const { type, target } of targets) {
+    let currentTypeCount = 0;
+    let attempts = 0;
+
+    // Increase attempt limit significantly for hard-to-generate types (Interference)
+    const maxAttempts = Math.max(target * 50, 100);
+
+    while (currentTypeCount < target && attempts < maxAttempts) {
+      attempts++;
+
+      // Create specific config for this problem
+      // We ignore the passed `config` patternId to ensure variety,
+      // picking a random supported pattern each time.
+      const patternId =
+        SUPPORTED_PATTERNS[
+          Math.floor(Math.random() * SUPPORTED_PATTERNS.length)
+        ];
+
+      const currentConfig: ProblemConfig = {
+        patternId,
+        requireInterference: type === "interference",
+        requirePenchan: type === "penchan",
+      };
+
+      const problem = generateProblem(currentConfig);
+
+      // 重複チェック
+      const hash = problem.tehai.join(",");
+      if (generatedTehaiHashes.has(hash)) {
+        continue;
+      }
+
+      // Check if we actually got what we wanted (especially for Interference/Penchan)
+      // generateProblem might return a fallback or a normal problem if generation fails.
+      // Ideally generateProblem should throw or strict return, but currently it returns fallback.
+      // We can check the properties of the generated problem if needed,
+      // but for now we trust generateProblem's "Specialized Fallback" or success.
+
+      generatedTehaiHashes.add(hash);
+      problems.push(problem);
+      currentTypeCount++;
+    }
+  }
+
+  // Shuffle the problems
+  for (let i = problems.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [problems[i], problems[j]] = [problems[j], problems[i]];
+  }
+
+  return problems;
 }
 
 /**
@@ -393,4 +215,70 @@ export function checkAnswer(
   const sortedCorrect = [...machi].sort((a, b) => a - b);
 
   return sortedSelected.every((val, index) => val === sortedCorrect[index]);
+}
+
+/**
+ * 手牌を連結したブロックに分割する
+ * 数牌は距離1以内（連番・同一）で連結。字牌は同一牌のみ連結。
+ * スートが異なる場合は切断。
+ */
+export function splitIntoBlocks(tehai: readonly HaiKindId[]): HaiKindId[][] {
+  const sorted = [...tehai].sort((a, b) => a - b);
+
+  if (sorted.length === 0) return [];
+
+  const blocksRaw: HaiKindId[][] = [];
+  let currentBlockRaw: HaiKindId[] = [sorted[0]];
+
+  for (let i = 1; i < sorted.length; i++) {
+    const prev = sorted[i - 1];
+    const curr = sorted[i];
+
+    // Check connectivity
+    // 1. Same Suit? (Range check)
+    // 2. Distance <= 1?
+
+    const prevSuit = getSuit(prev);
+    const currSuit = getSuit(curr);
+
+    const prevNum = haiKindToNumber(prev);
+    const currNum = haiKindToNumber(curr);
+
+    // 連結条件: スートが同じ かつ (数値差<=1 または 同一牌)
+    // ※字牌の場合、数値は関係ないが、getSuitで区別されるか？
+    // getSuit implementation separates honors individually? No, usually groups them.
+    // If we group honors, "East" and "South" should NOT construct a block.
+    // So for honors, we require EXACT ID match.
+    // For Suupai, we allow difference <= 1.
+
+    let isConnected = false;
+    if (prevSuit < 3 && currSuit < 3) {
+      // Both Suupai and same suit
+      if (prevSuit === currSuit && currNum - prevNum <= 1) {
+        isConnected = true;
+      }
+    } else {
+      // Honors or mixed
+      // Only connect if identical ID
+      if (prev === curr) {
+        isConnected = true;
+      }
+    }
+
+    if (isConnected) {
+      currentBlockRaw.push(curr);
+    } else {
+      blocksRaw.push(currentBlockRaw);
+      currentBlockRaw = [curr];
+    }
+  }
+  blocksRaw.push(currentBlockRaw);
+  return blocksRaw;
+}
+
+function getSuit(hai: HaiKindId): number {
+  if (hai >= HaiKind.ManZu1 && hai <= HaiKind.ManZu9) return 0;
+  if (hai >= HaiKind.PinZu1 && hai <= HaiKind.PinZu9) return 1;
+  if (hai >= HaiKind.SouZu1 && hai <= HaiKind.SouZu9) return 2;
+  return 3; // Treat all honors as suit 3 (logic above handles details)
 }

@@ -19,7 +19,7 @@ import { PatternId } from "../types";
 export function getIdealWaitCount(patternId: PatternId): number {
   // Currently only "1112" is supported
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (patternId === "1112") {
+  if (patternId === "31") {
     return 3;
   }
   return 0;

@@ -1,5 +1,6 @@
 import { PatternNotSupportedError } from "../errors";
 import { PatternId, SUPPORTED_PATTERNS } from "../types";
+import { Pai } from "./Pai";
 
 /**
  * 手牌のパターンを正規化するロジック
@@ -25,40 +26,16 @@ export function normalize(tiles: readonly number[]): PatternId {
     throw new PatternNotSupportedError("");
   }
 
-  // 1. 基本的な整形（ソート）
-  const sorted = [...tiles].sort((a, b) => a - b);
+  const pai = Pai.fromTiles(tiles);
+  const patternId = pai.value;
 
-  // 2. そのままスライドした形 (Original Slide)
-  const originalSlide = slideToOne(sorted);
-  const originalKey = originalSlide.join("");
-
-  // 3. 反転して整形した形 (Mirrored)
-  // 10 - n で反転 (1->9, 2->8, ..., 9->1)
-  const mirrored = sorted.map((n) => 10 - n).sort((a, b) => a - b);
-
-  // 4. 反転形をスライド (Mirrored Slide)
-  const mirroredSlide = slideToOne(mirrored);
-  const mirroredKey = mirroredSlide.join("");
-
-  // 5. 辞書順で小さい方を採用
-  const normalizedKey = originalKey < mirroredKey ? originalKey : mirroredKey;
-
-  if (!isSupportedPattern(normalizedKey)) {
-    throw new PatternNotSupportedError(normalizedKey);
+  if (!isSupportedPattern(patternId)) {
+    throw new PatternNotSupportedError(patternId);
   }
 
-  return normalizedKey;
+  return patternId;
 }
 
 function isSupportedPattern(pattern: string): pattern is PatternId {
   return SUPPORTED_PATTERNS.some((p) => p === pattern);
-}
-
-/**
- * 最小値が1になるように全体をシフトするヘルパー関数
- */
-function slideToOne(tiles: readonly number[]): number[] {
-  if (tiles.length === 0) return [];
-  const min = tiles[0];
-  return tiles.map((n) => n - min + 1);
 }

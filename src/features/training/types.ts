@@ -1,7 +1,7 @@
 /**
  * サポートされているパターンIDのリスト
  */
-export const SUPPORTED_PATTERNS = ["1112"] as const;
+export const SUPPORTED_PATTERNS = ["31"] as const;
 
 /**
  * パターンを一意に識別するID文字列

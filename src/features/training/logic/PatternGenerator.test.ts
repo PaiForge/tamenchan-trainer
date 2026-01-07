@@ -7,7 +7,7 @@ import { PatternId } from "../types";
 describe("PatternGenerator", () => {
   describe("generateHand", () => {
     it("生成された手牌が元のパターンIDに正規化されること", () => {
-      const patternId: PatternId = "1112";
+      const patternId: PatternId = "31";
 
       // Run 100 random generations to cover various possibilities
       for (let i = 0; i < 100; i++) {
@@ -42,7 +42,7 @@ describe("PatternGenerator", () => {
 
   // Additional check to ensure variety (probabilistic)
   it("（スライドや反転を含む）多様な手牌が生成されること", () => {
-    const patternId: PatternId = "1112";
+    const patternId: PatternId = "31";
     const generated = new Set<string>();
 
     // 1112 is small enough to have many valid positions.

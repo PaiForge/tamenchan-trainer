@@ -39,7 +39,7 @@ export default function HomeScreen() {
           }}
         >
           <Text className="text-white text-lg font-bold tracking-widest">
-            1112型
+            31型
           </Text>
         </Pressable>
       </View>
