@@ -24,8 +24,9 @@ export function ActionButtons({
       </Pressable>
 
       <Pressable
-        className={`py-3.5 px-8 rounded-lg min-w-[140px] items-center ${isCorrect ? "bg-surface" : "bg-primary"
-          }`}
+        className={`py-3.5 px-8 rounded-lg min-w-[140px] items-center ${
+          isCorrect ? "bg-surface" : "bg-primary"
+        }`}
         onPress={onSubmit}
         disabled={isCorrect === true}
       >

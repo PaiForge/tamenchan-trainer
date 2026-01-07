@@ -3,11 +3,7 @@ import { View, Text, Pressable } from "react-native";
 import { Hai } from "@pai-forge/mahjong-react-ui";
 import { HaiKindId, HaiType } from "@pai-forge/riichi-mahjong";
 import { Suupai } from "../../../../types";
-import {
-  MANZU_HAIS,
-  PINZU_HAIS,
-  SOUZU_HAIS,
-} from "../../../../constants";
+import { MANZU_HAIS, PINZU_HAIS, SOUZU_HAIS } from "../../../../constants";
 
 interface AnswerInputProps {
   readonly selectedMachi: readonly HaiKindId[];
@@ -63,10 +59,11 @@ export function AnswerInput({
                 onToggleMachi(hai);
               }}
               hitSlop={10}
-              className={`p-0.5 rounded border-2 relative items-center justify-center ${isSelected
-                ? "border-primary bg-primary/20" // Use Tailwind utility classes for basic state
-                : "border-transparent bg-transparent"
-                }`}
+              className={`p-0.5 rounded border-2 relative items-center justify-center ${
+                isSelected
+                  ? "border-primary bg-primary/20" // Use Tailwind utility classes for basic state
+                  : "border-transparent bg-transparent"
+              }`}
               style={{
                 opacity: isSelected ? 1.0 : 0.5,
                 // We rely on className for colors now, but keep opacity style for convenience

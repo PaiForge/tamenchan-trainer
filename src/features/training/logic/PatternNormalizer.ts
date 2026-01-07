@@ -20,45 +20,45 @@ import { PatternId, SUPPORTED_PATTERNS } from "../types";
  * // 2333p (2,3,3,3) -> "1112"
  * // 8999s (8,9,9,9) -> "1112" (反転・正規化により同一視)
  */
-export function normalize(tiles: number[]): PatternId {
-    if (tiles.length === 0) {
-        throw new PatternNotSupportedError("");
-    }
+export function normalize(tiles: readonly number[]): PatternId {
+  if (tiles.length === 0) {
+    throw new PatternNotSupportedError("");
+  }
 
-    // 1. 基本的な整形（ソート）
-    const sorted = [...tiles].sort((a, b) => a - b);
+  // 1. 基本的な整形（ソート）
+  const sorted = [...tiles].sort((a, b) => a - b);
 
-    // 2. そのままスライドした形 (Original Slide)
-    const originalSlide = slideToOne(sorted);
-    const originalKey = originalSlide.join("");
+  // 2. そのままスライドした形 (Original Slide)
+  const originalSlide = slideToOne(sorted);
+  const originalKey = originalSlide.join("");
 
-    // 3. 反転して整形した形 (Mirrored)
-    // 10 - n で反転 (1->9, 2->8, ..., 9->1)
-    const mirrored = sorted.map((n) => 10 - n).sort((a, b) => a - b);
+  // 3. 反転して整形した形 (Mirrored)
+  // 10 - n で反転 (1->9, 2->8, ..., 9->1)
+  const mirrored = sorted.map((n) => 10 - n).sort((a, b) => a - b);
 
-    // 4. 反転形をスライド (Mirrored Slide)
-    const mirroredSlide = slideToOne(mirrored);
-    const mirroredKey = mirroredSlide.join("");
+  // 4. 反転形をスライド (Mirrored Slide)
+  const mirroredSlide = slideToOne(mirrored);
+  const mirroredKey = mirroredSlide.join("");
 
-    // 5. 辞書順で小さい方を採用
-    const normalizedKey = originalKey < mirroredKey ? originalKey : mirroredKey;
+  // 5. 辞書順で小さい方を採用
+  const normalizedKey = originalKey < mirroredKey ? originalKey : mirroredKey;
 
-    if (!isSupportedPattern(normalizedKey)) {
-        throw new PatternNotSupportedError(normalizedKey);
-    }
+  if (!isSupportedPattern(normalizedKey)) {
+    throw new PatternNotSupportedError(normalizedKey);
+  }
 
-    return normalizedKey;
+  return normalizedKey;
 }
 
 function isSupportedPattern(pattern: string): pattern is PatternId {
-    return (SUPPORTED_PATTERNS as readonly string[]).includes(pattern);
+  return SUPPORTED_PATTERNS.some((p) => p === pattern);
 }
 
 /**
  * 最小値が1になるように全体をシフトするヘルパー関数
  */
-function slideToOne(tiles: number[]): number[] {
-    if (tiles.length === 0) return [];
-    const min = tiles[0];
-    return tiles.map((n) => n - min + 1);
+function slideToOne(tiles: readonly number[]): number[] {
+  if (tiles.length === 0) return [];
+  const min = tiles[0];
+  return tiles.map((n) => n - min + 1);
 }

@@ -3,37 +3,37 @@
 @tailwind utilities;
 
 @layer base {
-    :root {
-        /* Navy Theme (Default) */
-        --color-background: #111827;
-        /* gray-900 */
-        --color-surface: #1f2937;
-        /* gray-800 */
-        --color-primary: #0d9488;
-        /* teal-600 */
-        --color-primary-dark: #0f766e;
-        /* teal-700 */
-        --color-text: #ffffff;
-        --color-text-muted: #9ca3af;
-        /* gray-400 */
-        --color-border: #374151;
-        /* gray-700 */
-    }
+  :root {
+    /* Navy Theme (Default) */
+    --color-background: #111827;
+    /* gray-900 */
+    --color-surface: #1f2937;
+    /* gray-800 */
+    --color-primary: #0d9488;
+    /* teal-600 */
+    --color-primary-dark: #0f766e;
+    /* teal-700 */
+    --color-text: #ffffff;
+    --color-text-muted: #9ca3af;
+    /* gray-400 */
+    --color-border: #374151;
+    /* gray-700 */
+  }
 
-    .theme-green {
-        /* Green Theme */
-        --color-background: #14532d;
-        /* green-900 */
-        --color-surface: #166534;
-        /* green-800 */
-        --color-primary: #d97706;
-        /* amber-600 */
-        --color-primary-dark: #b45309;
-        /* amber-700 */
-        --color-text: #ffffff;
-        --color-text-muted: #d1d5db;
-        /* gray-300 */
-        --color-border: #14532d;
-        /* green-900 (border on surface) */
-    }
+  .theme-green {
+    /* Green Theme */
+    --color-background: #14532d;
+    /* green-900 */
+    --color-surface: #166534;
+    /* green-800 */
+    --color-primary: #d97706;
+    /* amber-600 */
+    --color-primary-dark: #b45309;
+    /* amber-700 */
+    --color-text: #ffffff;
+    --color-text-muted: #d1d5db;
+    /* gray-300 */
+    --color-border: #14532d;
+    /* green-900 (border on surface) */
+  }
 }
