@@ -14,7 +14,7 @@ interface MahjongMarkdownProps {
 /**
  * 麻雀牌表記をパースしてHaiKindId配列に変換
  */
-function parseTileNotation(notation: string): HaiKindId[] {
+function parseTileNotation(notation: string): readonly HaiKindId[] {
   try {
     const tehai = parseMspz(notation);
     return tehai.closed;
@@ -118,24 +118,30 @@ const markdownStyles = StyleSheet.create({
     lineHeight: 24,
   },
   heading1: {
-    color: "#f9fafb",
-    fontSize: 28,
+    color: "#ffffff",
+    fontSize: 24,
     fontWeight: "bold",
-    marginTop: 16,
-    marginBottom: 12,
+    marginTop: 20,
+    marginBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#4b5563", // gray-600
+    paddingBottom: 8,
   },
   heading2: {
-    color: "#f9fafb",
-    fontSize: 22,
+    color: "#ffffff",
+    fontSize: 21,
     fontWeight: "bold",
-    marginTop: 16,
-    marginBottom: 10,
+    marginTop: 28,
+    marginBottom: 12,
+    borderLeftWidth: 4,
+    borderLeftColor: "#0d9488", // teal-600 (primary)
+    paddingLeft: 12,
   },
   heading3: {
-    color: "#f9fafb",
+    color: "#e5e7eb", // gray-200
     fontSize: 18,
-    fontWeight: "600",
-    marginTop: 12,
+    fontWeight: "bold",
+    marginTop: 20,
     marginBottom: 8,
   },
   paragraph: {

@@ -71,7 +71,6 @@ export default function HomeScreen() {
         onClose={() => {
           setPattern31HelpVisible(false);
         }}
-        title="パターン31について"
         content={pattern31Content}
       />
     </View>

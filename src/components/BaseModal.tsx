@@ -46,7 +46,7 @@ export function BaseModal({
             onPress={onClose}
           >
             <Pressable
-              className="w-[340px] bg-surface rounded-2xl p-6 border border-border"
+              className="w-[340px] max-h-[85%] bg-surface rounded-2xl p-6 border border-border"
               onPress={(e) => {
                 e.stopPropagation();
               }}
