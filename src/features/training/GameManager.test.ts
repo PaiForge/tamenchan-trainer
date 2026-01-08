@@ -14,7 +14,7 @@ describe("GameManager 問題生成", () => {
 
   it("指定されたパターン設定に従う", () => {
     const config: ProblemConfig = {
-      patternId: "31",
+      patternId: "13",
       requireInterference: false,
       requirePenchan: false,
     };
@@ -22,13 +22,13 @@ describe("GameManager 問題生成", () => {
     expect(problem.tehai.length).toBe(13);
   });
 
-  it("1112パターン (requirePenchan: false) - 常に3面待ち（シフト形）が生成されること", () => {
-    // requirePenchan: false の場合、理想的な待ち数（3種）未満のパターン（端の1112など）はリジェクトされる。
-    // 結果として、常にシフトされた形（2223など）の3面待ちが生成されるはずである。
+  it("1222パターン (requirePenchan: false) - 常に3面待ち（シフト形）が生成されること", () => {
+    // requirePenchan: false の場合、理想的な待ち数（3種）未満のパターン（端の1222など）はリジェクトされる。
+    // 結果として、常にシフトされた形（2333など）の3面待ちが生成されるはずである。
 
     for (let i = 0; i < 50; i++) {
       const config: ProblemConfig = {
-        patternId: "31",
+        patternId: "13",
         requireInterference: false,
         requirePenchan: false, // 厳密
       };
@@ -38,10 +38,9 @@ describe("GameManager 問題生成", () => {
       // 1. 待ちの数は必ず3種類であること
       expect(actualUkeire.length).toBe(3);
 
-      // 2. 待ちの形が n-1, n+1, n+2 (例: 1,3,4) であることの検証
-      // 注: 1,3,4 (Gap 2,1) または 6,8,9 (Mirrored 1112 -> 2223 -> 7778, Wait 6,8,9 -> Gap 2,1)
-      // または 2333 (Gap 1,2: 1,2,4) or 6777 (Gap 1,2: 5,7,8)
-      // つまり、Gapは (2,1) または (1,2) のいずれかである。
+      // 2. 待ちの形が n-1, n, n+2 (例: 1,2,4) であることの検証
+      // 注: 1,2,4 (Gap 1,2) または 5,7,8 (Mirrored 1222 -> 8999 -> 6777, Wait 5,7,8 -> Gap 2,1)
+      // つまり、Gapは (1,2) または (2,1) のいずれかである。
       const gap1 = actualUkeire[1] - actualUkeire[0];
       const gap2 = actualUkeire[2] - actualUkeire[1];
 
@@ -52,20 +51,20 @@ describe("GameManager 問題生成", () => {
     }
   });
 
-  it("1112パターン (requirePenchan: true) - 常に2面待ち（端）が生成されること", () => {
+  it("1222パターン (requirePenchan: true) - 常に2面待ち（端）が生成されること", () => {
     // requirePenchan: true の場合、強制的に辺張（または理想待ち未満）が生成される。
-    // 常に理想待ち数（3種）未満のパターン（端の1112など）が選択される。
+    // 常に理想待ち数（3種）未満のパターン（端の1222など）が選択される。
 
     for (let i = 0; i < 50; i++) {
       const config: ProblemConfig = {
-        patternId: "31",
+        patternId: "13",
         requireInterference: false,
         requirePenchan: true, // 強制（ペンチャンのみ）
       };
       const problem = generateProblem(config);
       const actualUkeire = [...problem.machi].sort((a, b) => a - b);
 
-      // 1112パターンのペンチャン（端）は必ず2面待ち
+      // 1222パターンのペンチャン（端）は必ず2面待ち
       expect(actualUkeire.length).toBe(2);
 
       // Gapは 1 (例: 2,3) または 2 (例: 1,3 [1222形])
@@ -77,7 +76,7 @@ describe("GameManager 問題生成", () => {
   it("厳密な干渉処理を行う (requireInterference: false)", () => {
     // requireInterference: false の場合、待ちが減るような干渉は禁止される。
     const config: ProblemConfig = {
-      patternId: "31",
+      patternId: "13",
       requireInterference: false,
       requirePenchan: false,
     };
@@ -88,7 +87,7 @@ describe("GameManager 問題生成", () => {
   it("干渉ありの問題生成 (requireInterference: true)", () => {
     // requireInterference: true の場合、強制的に干渉（待ちが減る）が発生する。
     // つまり、実際の待ち（actualUkeire）はコア待ちの真部分集合になるはずである。
-    // Note: 1112パターンでの干渉は生成難易度が高いため、試行回数を増やして確認するか、
+    // Note: 1222パターンでの干渉は生成難易度が高いため、試行回数を増やして確認するか、
     // 比較的干渉しやすいパターンでテストするのが望ましいが、ここではロジックの疎通確認を行う。
 
     // 10回試行して、生成できた場合は必ず干渉していることを確認
@@ -96,7 +95,7 @@ describe("GameManager 問題生成", () => {
 
     for (let i = 0; i < 10; i++) {
       const config: ProblemConfig = {
-        patternId: "31",
+        patternId: "13",
         requireInterference: true, // 強制
         requirePenchan: false,
       };
@@ -109,7 +108,7 @@ describe("GameManager 問題生成", () => {
 
       if (!isFallback) {
         // 生成成功時は、待ちの数が理想（3種類）未満になっているはず
-        // 1112 (Ideal 3 waits) -> Interference -> < 3 waits
+        // 1222 (Ideal 3 waits) -> Interference -> < 3 waits
         // ただし、requirePenchan=false なので、Penchanによる減少ではなく、
         // 干渉による減少であることを確認したいが、外形的には「待ちが減っている」ことしかわからない。
         // 厳密には PatternGenerator でコア生成して比較すべきだが、簡易的に数でチェックする。
@@ -118,12 +117,12 @@ describe("GameManager 問題生成", () => {
     }
   });
 
-  it("31型の問題生成において313型（スーパーセット）が生成されないこと", () => {
-    // 31型 (1112) のスーパーセットとして 313型 (1112333 など) がある。
-    // これらは待ちが増える（1112: 2,3 -> 1112333: 1,3,4など）ため、
+  it("13型の問題生成において313型（スーパーセット）が生成されないこと", () => {
+    // 13型 (1222) のスーパーセットとして 313型 (1222333 など) がある。
+    // これらは待ちが増える（1222: 1,2,4 -> 1222333: 1,3,4など）ため、
     // 干渉なし(requireInterference: false)の設定では排除されるべきである。
     const config: ProblemConfig = {
-      patternId: "31",
+      patternId: "13",
       requireInterference: false,
       requirePenchan: false,
     };
@@ -132,9 +131,8 @@ describe("GameManager 問題生成", () => {
     for (let i = 0; i < 100; i++) {
       const problem = generateProblem(config);
 
-      // 31型の理想待ちは2種 (1112 -> 2,3) または3種 (2223 -> 1,4 ... error, 1112 is 2 waits? NO 1112 is 2,3. 2223 is 1,4. Both 2 waits.)
-      // 待て、1112 (31) は 2,3 の2面待ち。 2223 (31) は 1,4 の2面待ち。
-      // つまり31型の待ちは常に2種である（端にかかっていない場合）
+      // 13型の理想待ちは3種 (1222 -> 1,2,4) または (2333 -> 1,2,4)。
+      // つまり13型の待ちは常に3種である（端にかかっていない場合）
       // 待ちが3種以上になっている場合はスーパーセットの疑いがある。
 
       if (problem.machi.length > 3) {
@@ -149,7 +147,7 @@ describe("GameManager 問題生成", () => {
     // ここでは大量生成し、全てが正しいパターンであることを確認する。
 
     const config: ProblemConfig = {
-      patternId: "31",
+      patternId: "13",
       requireInterference: false,
       requirePenchan: false,
     };
@@ -169,7 +167,7 @@ describe("GameManager 問題生成", () => {
   it("generateProblemSet: 10問のユニークな問題セットが生成されること", () => {
     // 厳密な構造チェックを外したので、重複排除ロジックの動作が重要になる。
     const config: ProblemConfig = {
-      patternId: "31",
+      patternId: "13",
       requireInterference: false,
       requirePenchan: false,
     };
@@ -190,7 +188,7 @@ describe("GameManager 問題生成", () => {
     // Interference(10%) -> <3 waits or valid interference shape
 
     // Config is ignored in generateProblemSet internal loop logic for variety
-    const set = generateProblemSet(50, { patternId: "31" });
+    const set = generateProblemSet(50, { patternId: "13" });
     // We expect 50, but allow slight under-generation due to randomness/uniqueness checks
     expect(set.length).toBeGreaterThanOrEqual(40);
 

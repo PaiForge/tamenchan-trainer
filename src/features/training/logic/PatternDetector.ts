@@ -1,4 +1,4 @@
-import { PatternId } from "../types";
+import { PatternId } from "@/core/pattern";
 
 /**
  * 指定されたパターンの理想的な（最大の）待ちの数を返す
@@ -17,9 +17,9 @@ import { PatternId } from "../types";
  * 簡易的に、PatternId ごとの「最大」を定義し、それ未満ならペンチャン（または端）と判定する基準として使用する。
  */
 export function getIdealWaitCount(patternId: PatternId): number {
-  // Currently only "1112" is supported
+  // Currently only "1222" is supported
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (patternId === "31") {
+  if (patternId === "13") {
     return 3;
   }
   return 0;

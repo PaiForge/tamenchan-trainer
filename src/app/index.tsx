@@ -4,14 +4,14 @@ import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { SettingsModal } from "../components/SettingsModal";
 import { PatternExplanationModal } from "../components/PatternExplanationModal";
-import { pattern31Content } from "../content/patterns/pattern31";
+import { pattern13Content } from "../content/patterns/pattern13";
 
 /**
  *
  */
 export default function HomeScreen() {
   const [isSettingsVisible, setSettingsVisible] = useState(false);
-  const [isPattern31HelpVisible, setPattern31HelpVisible] = useState(false);
+  const [isPattern13HelpVisible, setPattern13HelpVisible] = useState(false);
 
   return (
     <View className="flex-1 bg-background items-center justify-center p-6 relative">
@@ -43,7 +43,7 @@ export default function HomeScreen() {
             }}
           >
             <Text className="text-white text-lg font-bold tracking-widest">
-              31型
+              13型
             </Text>
           </Pressable>
 
@@ -51,7 +51,7 @@ export default function HomeScreen() {
           <Pressable
             className="w-12 h-12 bg-surface rounded-full items-center justify-center border border-border active:bg-surface-hover"
             onPress={() => {
-              setPattern31HelpVisible(true);
+              setPattern13HelpVisible(true);
             }}
           >
             <Ionicons name="help-outline" size={24} color="#9ca3af" />
@@ -67,11 +67,11 @@ export default function HomeScreen() {
       />
 
       <PatternExplanationModal
-        visible={isPattern31HelpVisible}
+        visible={isPattern13HelpVisible}
         onClose={() => {
-          setPattern31HelpVisible(false);
+          setPattern13HelpVisible(false);
         }}
-        content={pattern31Content}
+        content={pattern13Content}
       />
     </View>
   );

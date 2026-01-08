@@ -62,7 +62,7 @@ export default function TrainingScreen() {
     // Generate mixed problem set (1 Interference, 2 Penchan, 7 Normal)
     // The internal logic of generateProblemSet handles the distribution when count >= 10.
     const pool = generateProblemSet(10, {
-      patternId: "31", // Base config (ignored internally for mixed generation logic)
+      patternId: "13", // Base config (ignored internally for mixed generation logic)
       requirePenchan: false,
       requireInterference: false,
     });

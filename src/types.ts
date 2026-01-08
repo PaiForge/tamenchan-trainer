@@ -5,3 +5,6 @@ export type Suupai =
   | typeof HaiType.Manzu
   | typeof HaiType.Pinzu
   | typeof HaiType.Souzu;
+
+// Re-export Pattern types from core module
+export type { PatternId } from "./core/pattern";
