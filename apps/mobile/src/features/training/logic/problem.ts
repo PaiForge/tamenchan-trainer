@@ -4,8 +4,7 @@ import {
   HaiKind,
   getUkeire,
 } from "@pai-forge/riichi-mahjong";
-import { PatternId, SUPPORTED_PATTERNS } from "@/core/pattern";
-import { Suupai } from "@/types";
+import { PatternId, SUPPORTED_PATTERNS, Suupai } from "@tamenchan-trainer/core";
 import { Strategies, TransformOptions } from "./strategies";
 
 /**

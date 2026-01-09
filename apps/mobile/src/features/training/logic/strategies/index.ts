@@ -1,4 +1,4 @@
-import { PatternId } from "@/core/pattern";
+import { PatternId } from "@tamenchan-trainer/core";
 import { GenerationStrategy } from "./types";
 import { Pattern13Strategy } from "./pattern13";
 

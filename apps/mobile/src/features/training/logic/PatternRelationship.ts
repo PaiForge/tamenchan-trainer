@@ -1,4 +1,4 @@
-import { PatternId } from "@/core/pattern";
+import { PatternId } from "@tamenchan-trainer/core";
 
 /**
  * パターン間の関係性を定義する

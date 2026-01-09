@@ -3,7 +3,7 @@ import { View, Text, Pressable } from "react-native";
 import { Hai } from "@pai-forge/mahjong-react-ui";
 import { HaiKindId, HaiType } from "@pai-forge/riichi-mahjong";
 import { Suupai } from "../../../../types";
-import { MANZU_HAIS, PINZU_HAIS, SOUZU_HAIS } from "../../../../constants";
+import { MANZU_HAIS, PINZU_HAIS, SOUZU_HAIS } from "@tamenchan-trainer/core";
 
 interface AnswerInputProps {
   readonly selectedMachi: readonly HaiKindId[];

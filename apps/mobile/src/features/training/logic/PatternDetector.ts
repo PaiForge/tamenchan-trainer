@@ -1,4 +1,4 @@
-import { PatternId } from "@/core/pattern";
+import { PatternId } from "@tamenchan-trainer/core";
 
 /**
  * 指定されたパターンの理想的な（最大の）待ちの数を返す
