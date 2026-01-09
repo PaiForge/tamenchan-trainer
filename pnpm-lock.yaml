@@ -35,6 +35,9 @@ importers:
       '@react-native-async-storage/async-storage':
         specifier: 2.2.0
         version: 2.2.0(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))
+      '@tamenchan-trainer/content':
+        specifier: workspace:*
+        version: link:../../packages/content
       '@tamenchan-trainer/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -159,6 +162,21 @@ importers:
         version: 9.39.2(jiti@1.21.7)
       typescript:
         specifier: ^5.7.2
+        version: 5.9.3
+      typescript-eslint:
+        specifier: ^8.18.0
+        version: 8.52.0(eslint@9.39.2(jiti@1.21.7))(typescript@5.9.3)
+
+  packages/content:
+    devDependencies:
+      '@tamenchan-trainer/eslint-config-custom':
+        specifier: workspace:*
+        version: link:../eslint-config-custom
+      eslint:
+        specifier: ^9.17.0
+        version: 9.39.2(jiti@1.21.7)
+      typescript:
+        specifier: ~5.9.2
         version: 5.9.3
       typescript-eslint:
         specifier: ^8.18.0

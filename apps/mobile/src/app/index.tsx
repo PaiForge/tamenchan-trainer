@@ -4,7 +4,7 @@ import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { SettingsModal } from "../components/SettingsModal";
 import { PatternExplanationModal } from "../components/PatternExplanationModal";
-import { pattern13Content } from "../content/patterns/pattern13";
+import { pattern13Content } from "@tamenchan-trainer/content";
 
 /**
  *
