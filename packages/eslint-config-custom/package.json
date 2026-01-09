@@ -1,0 +1,14 @@
+{
+  "name": "@tamenchan-trainer/eslint-config-custom",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./index.js",
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-jsdoc": "^50.6.1",
+    "eslint-plugin-react": "^7.37.2",
+    "globals": "^15.14.0",
+    "typescript-eslint": "^8.18.0"
+  }
+}
