@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "*.js",
+    "*.config.js",
+    "*.mjs",
+    "*.ts",
+    "src/**/*.js",
+    "docs/**/*"
+  ],
+  "compilerOptions": {
+    "noEmit": true
+  }
+}

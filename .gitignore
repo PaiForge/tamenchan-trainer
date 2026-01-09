@@ -42,3 +42,9 @@ yarn.lock
 # generated native folders
 /ios
 /android
+
+# Turborepo
+.turbo
+
+# ワークスペースのnode_modules
+**/node_modules/

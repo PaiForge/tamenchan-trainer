@@ -7,7 +7,16 @@ import react from "eslint-plugin-react";
 
 export default tseslint.config(
     {
-        ignores: ["dist/**", "node_modules/**", "coverage/**", "eslint.config.mjs", ".expo/**", "web-build/**"],
+        ignores: [
+            "dist/**",
+            "node_modules/**",
+            "coverage/**",
+            "eslint.config.mjs",
+            ".expo/**",
+            "web-build/**",
+            "*.config.js",
+            "*.config.ts",
+        ],
     },
     js.configs.recommended,
     ...tseslint.configs.strictTypeChecked,
@@ -91,14 +100,6 @@ export default tseslint.config(
             "@typescript-eslint/consistent-type-assertions": "off",
             "@typescript-eslint/prefer-readonly-parameter-types": "off",
         },
-    },
-    // Add specific ignores for Expo/React Native files that might be tricky
-    {
-        files: ["metro.config.js", "babel.config.js", "tailwind.config.js"],
-        rules: {
-            "@typescript-eslint/no-require-imports": "off", // Config files often use require
-            "@typescript-eslint/no-var-requires": "off",
-        }
     },
     prettier, // Must be last
 );

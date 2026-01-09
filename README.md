@@ -3,6 +3,18 @@
 麻雀の多面張待ち当てトレーニングアプリです。
 React Native (Expo) で開発されています。
 
+## プロジェクト構成
+
+本プロジェクトは [Turborepo](https://turbo.build/repo) を使用したモノレポ構成になっています。
+
+```
+tamenchan-trainer/
+├── apps/
+│   └── mobile/          # React Native (Expo) モバイルアプリ
+├── packages/            # 共有パッケージ（将来追加予定）
+└── docs/               # ドキュメント
+```
+
 ## 前提条件 (Prerequisites)
 
 ### Node.js (Volta)
@@ -36,11 +48,18 @@ pnpm install
 
 ## 実行 (Run)
 
-開発サーバーを起動します。
+### 開発サーバー起動
+
+開発サーバーを起動します（Turborepo経由で実行されます）。
 
 ```bash
+# 開発サーバー起動
+pnpm dev
+# または
 pnpm start
 ```
+
+### プラットフォーム別起動
 
 OSごとの起動コマンド:
 
@@ -54,3 +73,24 @@ pnpm ios
 # Web
 pnpm web
 ```
+
+### 開発用コマンド
+
+```bash
+# リント実行
+pnpm lint
+
+# リント自動修正
+pnpm lint:fix
+
+# 型チェック
+pnpm typecheck
+
+# テスト実行
+pnpm test
+
+# コードフォーマット
+pnpm format
+```
+
+> **Note:** すべてのコマンドはTurborepoによって管理され、適切なキャッシュと並列実行が行われます。
