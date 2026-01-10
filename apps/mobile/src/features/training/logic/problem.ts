@@ -128,6 +128,9 @@ export function generateProblem(
 
   const tehai = [...coreTiles, ...padding].sort((a, b) => a - b);
 
+  // HACK: 現状、getUkeire が内部的に validateTehai を実行しているため、
+  // ここで明示的に validateTehai13 を呼び出していない。
+  // 将来的には getUkeire に依存せず、明示的にバリデーションを実行すべき。
   return {
     tehai,
     tsumo: null,
