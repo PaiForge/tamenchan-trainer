@@ -4,24 +4,13 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Markdown, { RenderRules } from "react-native-markdown-display";
 import { Hai } from "@pai-forge/mahjong-react-ui";
-import { parseMspz } from "@pai-forge/riichi-mahjong";
-import type { HaiKindId } from "@pai-forge/riichi-mahjong";
+import {
+  parseTileNotation,
+  TILE_NOTATION_PATTERN,
+} from "@tamenchan-trainer/content";
 
 interface MahjongMarkdownProps {
   readonly content: string;
-}
-
-/**
- * 麻雀牌表記をパースしてHaiKindId配列に変換
- */
-function parseTileNotation(notation: string): readonly HaiKindId[] {
-  try {
-    const tehai = parseMspz(notation);
-    return tehai.closed;
-  } catch (error) {
-    console.warn(`Invalid tile notation: ${notation}`, error);
-    return [];
-  }
 }
 
 /**
@@ -32,8 +21,8 @@ const customRules: RenderRules = {
   text: (node, children, parent, styles) => {
     const textContent = node.content;
 
-    // {{...}} パターンを検出
-    const tilePattern = /\{\{([^}]+)\}\}/g;
+    // {{...}} パターンを検出（共通ユーティリティを使用）
+    const tilePattern = new RegExp(TILE_NOTATION_PATTERN);
     const parts: React.ReactNode[] = [];
     let lastIndex = 0;
     let match;
@@ -50,9 +39,8 @@ const customRules: RenderRules = {
 
       // 牌表記部分
       const notation = match[1]; // "2223p"
-      const tiles = parseTileNotation(notation);
-
-      if (tiles.length > 0) {
+      try {
+        const tiles = parseTileNotation(notation);
         parts.push(
           <View
             key={`tiles-${match.index}`}
@@ -73,8 +61,9 @@ const customRules: RenderRules = {
             ))}
           </View>,
         );
-      } else {
+      } catch (error) {
         // パースに失敗した場合は元のテキストを表示
+        console.warn(`Invalid tile notation: ${notation}`, error);
         parts.push(
           <Text key={`error-${match.index}`} style={styles.text}>
             {match[0]}

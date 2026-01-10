@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "@pai-forge/mahjong-react-ui/styles.css";
 
 export const metadata: Metadata = {
   title: "多面張トレーナー",

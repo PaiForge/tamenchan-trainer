@@ -13,6 +13,9 @@
     "lint:fix": "eslint src --fix",
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "@pai-forge/riichi-mahjong": "^0.1.0"
+  },
   "devDependencies": {
     "@tamenchan-trainer/eslint-config-custom": "workspace:*",
     "eslint": "^9.17.0",

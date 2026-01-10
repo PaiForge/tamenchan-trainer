@@ -2,6 +2,10 @@ import React from "react";
 import { ScrollView } from "react-native";
 import { BaseModal } from "./BaseModal";
 import { MahjongMarkdown } from "./MahjongMarkdown";
+import {
+  extractMarkdownTitle,
+  removeMarkdownTitle,
+} from "@tamenchan-trainer/content";
 
 interface PatternExplanationModalProps {
   readonly visible: boolean;
@@ -20,12 +24,11 @@ export function PatternExplanationModal({
   title,
 }: Readonly<PatternExplanationModalProps>) {
   // Extract H1 title from markdown content if title prop is not provided
-  const match = /^#\s+(.+)$/m.exec(content);
-  const extractedTitle = match ? match[1] : "";
+  const extractedTitle = extractMarkdownTitle(content);
   const displayTitle = title ?? extractedTitle;
 
   // Remove H1 from content to avoid duplication in the body
-  const bodyContent = content.replace(/^#\s+.+$/m, "").trim();
+  const bodyContent = removeMarkdownTitle(content);
 
   return (
     <BaseModal visible={visible} onClose={onClose} title={displayTitle}>
