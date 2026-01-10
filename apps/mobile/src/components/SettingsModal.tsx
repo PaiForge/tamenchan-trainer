@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, Pressable } from "react-native";
+import { useTranslation } from "react-i18next";
 import { useSettings } from "../features/settings/SettingsContext";
 import { HaiType } from "@pai-forge/riichi-mahjong";
 import { BaseModal } from "./BaseModal";
@@ -16,6 +17,7 @@ export function SettingsModal({
   visible,
   onClose,
 }: Readonly<SettingsModalProps>) {
+  const { t } = useTranslation();
   const { theme, setTheme, preferredSuit, setPreferredSuit } = useSettings();
 
   // Local state for explicit save and preview
@@ -40,12 +42,14 @@ export function SettingsModal({
     <BaseModal
       visible={visible}
       onClose={onClose}
-      title="設定"
+      title={t("settings.title")}
       themeOverride={tempTheme}
     >
       {/* Theme Settings */}
       <View className="mb-8">
-        <Text className="text-text-muted mb-3 font-bold">テーマ</Text>
+        <Text className="text-text-muted mb-3 font-bold">
+          {t("settings.theme.label")}
+        </Text>
         <View className="flex-row gap-3">
           <Pressable
             onPress={() => {
@@ -65,7 +69,7 @@ export function SettingsModal({
                   : "text-gray-400"
               }
             >
-              Navy
+              {t("settings.theme.navy")}
             </Text>
           </Pressable>
 
@@ -87,7 +91,7 @@ export function SettingsModal({
                   : "text-gray-400"
               }
             >
-              Green
+              {t("settings.theme.green")}
             </Text>
           </Pressable>
         </View>
@@ -95,17 +99,19 @@ export function SettingsModal({
 
       {/* Suit Settings */}
       <View className="mb-8">
-        <Text className="text-text-muted mb-3 font-bold">問題に用いる数牌</Text>
+        <Text className="text-text-muted mb-3 font-bold">
+          {t("settings.suit.label")}
+        </Text>
         <View className="flex-row flex-wrap gap-2">
           {(
             ["random", HaiType.Manzu, HaiType.Pinzu, HaiType.Souzu] as const
           ).map((suit) => {
             const isSelected = tempSuit === suit;
             const labels: Record<string, string> = {
-              random: "ランダム",
-              [HaiType.Manzu]: "萬子",
-              [HaiType.Pinzu]: "筒子",
-              [HaiType.Souzu]: "索子",
+              random: t("settings.suit.random"),
+              [HaiType.Manzu]: t("settings.suit.manzu"),
+              [HaiType.Pinzu]: t("settings.suit.pinzu"),
+              [HaiType.Souzu]: t("settings.suit.souzu"),
             };
             return (
               <Pressable
@@ -137,7 +143,9 @@ export function SettingsModal({
         className="bg-primary py-3 rounded-xl items-center active:bg-primary-dark"
         onPress={handleSave}
       >
-        <Text className="text-white font-bold text-lg">設定を保存</Text>
+        <Text className="text-white font-bold text-lg">
+          {t("settings.save")}
+        </Text>
       </Pressable>
     </BaseModal>
   );

@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, Pressable } from "react-native";
+import { useTranslation } from "react-i18next";
 
 interface ActionButtonsProps {
   readonly onOpenCheatSheet: () => void;
@@ -17,10 +18,14 @@ export function ActionButtons({
   onSkip,
   isCorrect,
 }: Readonly<ActionButtonsProps>) {
+  const { t } = useTranslation();
+
   return (
     <View className="flex-row justify-around items-center px-6 pb-6">
       <Pressable className="p-3" onPress={onOpenCheatSheet}>
-        <Text className="text-text-muted underline">答えを見る</Text>
+        <Text className="text-text-muted underline">
+          {t("training.viewAnswer")}
+        </Text>
       </Pressable>
 
       <Pressable
@@ -30,12 +35,14 @@ export function ActionButtons({
         onPress={onSubmit}
         disabled={isCorrect === true}
       >
-        <Text className="text-white text-lg font-bold">回答する</Text>
+        <Text className="text-white text-lg font-bold">
+          {t("training.submit")}
+        </Text>
       </Pressable>
 
       {isCorrect === false && (
         <Pressable className="p-3" onPress={onSkip}>
-          <Text className="text-white">スキップ</Text>
+          <Text className="text-white">{t("training.skip")}</Text>
         </Pressable>
       )}
     </View>

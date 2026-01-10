@@ -1,0 +1,38 @@
+{
+  "home": {
+    "title": "Tamenchan",
+    "subtitle": "Trainer",
+    "pattern13": "13型"
+  },
+  "settings": {
+    "title": "設定",
+    "theme": {
+      "label": "テーマ",
+      "navy": "Navy",
+      "green": "Green"
+    },
+    "suit": {
+      "label": "問題に用いる数牌",
+      "random": "ランダム",
+      "manzu": "萬子",
+      "pinzu": "筒子",
+      "souzu": "索子"
+    },
+    "save": "設定を保存"
+  },
+  "training": {
+    "questionProgress": "Question {{current}} / {{total}}",
+    "finish": "Finish!",
+    "home": "Home",
+    "retry": "Retry",
+    "viewAnswer": "答えを見る",
+    "submit": "回答する",
+    "skip": "スキップ",
+    "correct": "正解！",
+    "incorrect": "不正解...",
+    "cheatsheet": {
+      "title": "正解（待ち牌）",
+      "close": "閉じる"
+    }
+  }
+}

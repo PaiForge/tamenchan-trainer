@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Suupai } from "../../types";
+import { changeLanguage, type SupportedLanguage } from "../../i18n";
 
 export type Theme = "navy" | "green";
 export type PreferredSuit = Suupai | "random";
@@ -14,8 +15,10 @@ export type PreferredSuit = Suupai | "random";
 interface SettingsContextType {
   readonly theme: Theme;
   readonly preferredSuit: PreferredSuit;
+  readonly language: SupportedLanguage;
   readonly setTheme: (theme: Theme) => Promise<void>;
   readonly setPreferredSuit: (suit: PreferredSuit) => Promise<void>;
+  readonly setLanguage: (language: SupportedLanguage) => Promise<void>;
   readonly isLoading: boolean;
 }
 
@@ -28,11 +31,13 @@ const SETTINGS_STORAGE_KEY = "@tamenchan_settings";
 interface StoredSettings {
   readonly theme?: Theme;
   readonly preferredSuit?: PreferredSuit;
+  readonly language?: SupportedLanguage;
 }
 
 const DEFAULT_SETTINGS: Required<StoredSettings> = {
   theme: "navy",
   preferredSuit: "random",
+  language: "ja",
 };
 
 /**
@@ -59,6 +64,9 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
   const [preferredSuit, setPreferredSuitState] = useState<PreferredSuit>(
     DEFAULT_SETTINGS.preferredSuit,
   );
+  const [language, setLanguageState] = useState<SupportedLanguage>(
+    DEFAULT_SETTINGS.language,
+  );
   const [isLoading, setIsLoading] = useState(true);
 
   // Load settings on mount
@@ -73,6 +81,7 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
           setPreferredSuitState(
             settings.preferredSuit ?? DEFAULT_SETTINGS.preferredSuit,
           );
+          setLanguageState(settings.language ?? DEFAULT_SETTINGS.language);
         }
       } catch (e) {
         console.error("Failed to load settings", e);
@@ -86,7 +95,7 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
 
   const saveSettings = async (newSettings: StoredSettings) => {
     try {
-      const currentSettings = { theme, preferredSuit };
+      const currentSettings = { theme, preferredSuit, language };
       const updatedSettings = { ...currentSettings, ...newSettings };
       await AsyncStorage.setItem(
         SETTINGS_STORAGE_KEY,
@@ -107,9 +116,23 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
     await saveSettings({ preferredSuit: newSuit });
   };
 
+  const setLanguage = async (newLanguage: SupportedLanguage) => {
+    setLanguageState(newLanguage);
+    await changeLanguage(newLanguage);
+    await saveSettings({ language: newLanguage });
+  };
+
   return (
     <SettingsContext.Provider
-      value={{ theme, preferredSuit, setTheme, setPreferredSuit, isLoading }}
+      value={{
+        theme,
+        preferredSuit,
+        language,
+        setTheme,
+        setPreferredSuit,
+        setLanguage,
+        isLoading,
+      }}
     >
       {children}
     </SettingsContext.Provider>

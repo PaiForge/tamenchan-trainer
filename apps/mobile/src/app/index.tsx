@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, Pressable } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import { SettingsModal } from "../components/SettingsModal";
 import { PatternExplanationModal } from "../components/PatternExplanationModal";
 import { pattern13Content } from "@tamenchan-trainer/content";
@@ -10,6 +11,7 @@ import { pattern13Content } from "@tamenchan-trainer/content";
  *
  */
 export default function HomeScreen() {
+  const { t } = useTranslation();
   const [isSettingsVisible, setSettingsVisible] = useState(false);
   const [isPattern13HelpVisible, setPattern13HelpVisible] = useState(false);
 
@@ -27,10 +29,10 @@ export default function HomeScreen() {
 
       <View className="items-center mb-16">
         <Text className="text-[42px] font-bold text-text tracking-widest">
-          Tamenchan
+          {t("home.title")}
         </Text>
         <Text className="text-2xl text-text-muted tracking-[4px] -mt-1">
-          Trainer
+          {t("home.subtitle")}
         </Text>
       </View>
 
@@ -43,7 +45,7 @@ export default function HomeScreen() {
             }}
           >
             <Text className="text-white text-lg font-bold tracking-widest">
-              13型
+              {t("home.pattern13")}
             </Text>
           </Pressable>
 

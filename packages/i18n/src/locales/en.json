@@ -1,0 +1,38 @@
+{
+  "home": {
+    "title": "Tamenchan",
+    "subtitle": "Trainer",
+    "pattern13": "13 Block"
+  },
+  "settings": {
+    "title": "Settings",
+    "theme": {
+      "label": "Theme",
+      "navy": "Navy",
+      "green": "Green"
+    },
+    "suit": {
+      "label": "Suit for Problems",
+      "random": "Random",
+      "manzu": "Characters",
+      "pinzu": "Circles",
+      "souzu": "Bamboo"
+    },
+    "save": "Save Settings"
+  },
+  "training": {
+    "questionProgress": "Question {{current}} / {{total}}",
+    "finish": "Finish!",
+    "home": "Home",
+    "retry": "Retry",
+    "viewAnswer": "View Answer",
+    "submit": "Submit",
+    "skip": "Skip",
+    "correct": "Correct!",
+    "incorrect": "Incorrect...",
+    "cheatsheet": {
+      "title": "Answer (Waiting Tiles)",
+      "close": "Close"
+    }
+  }
+}

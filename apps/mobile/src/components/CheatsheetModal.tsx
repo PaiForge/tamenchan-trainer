@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, Pressable } from "react-native";
+import { useTranslation } from "react-i18next";
 import { Hai } from "@pai-forge/mahjong-react-ui";
 import type { HaiKindId } from "@pai-forge/riichi-mahjong";
 import { BaseModal } from "./BaseModal";
@@ -18,8 +19,14 @@ export function CheatsheetModal({
   onClose,
   machi,
 }: Readonly<CheatsheetModalProps>) {
+  const { t } = useTranslation();
+
   return (
-    <BaseModal visible={visible} onClose={onClose} title="正解（待ち牌）">
+    <BaseModal
+      visible={visible}
+      onClose={onClose}
+      title={t("training.cheatsheet.title")}
+    >
       <View className="flex-row flex-wrap gap-2 justify-center mb-8">
         {machi.map((tile, index) => (
           <Hai key={index} hai={tile} size="lg" />
@@ -31,7 +38,9 @@ export function CheatsheetModal({
           className="bg-border py-3 px-8 rounded-xl min-w-[120px]"
           onPress={onClose}
         >
-          <Text className="text-white font-bold text-center">閉じる</Text>
+          <Text className="text-white font-bold text-center">
+            {t("training.cheatsheet.close")}
+          </Text>
         </Pressable>
       </View>
     </BaseModal>

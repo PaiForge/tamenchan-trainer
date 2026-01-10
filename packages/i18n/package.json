@@ -1,0 +1,23 @@
+{
+  "name": "@tamenchan-trainer/i18n",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./locales/ja": "./src/locales/ja.json",
+    "./locales/en": "./src/locales/en.json"
+  },
+  "scripts": {
+    "lint": "eslint src --max-warnings=0",
+    "lint:fix": "eslint src --fix",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@tamenchan-trainer/eslint-config-custom": "workspace:*",
+    "eslint": "^9.17.0",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.18.0"
+  }
+}

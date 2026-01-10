@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, useWindowDimensions, Text, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, router } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { HaiKindId } from "@pai-forge/riichi-mahjong";
 import {
   generateProblemSet,
@@ -21,6 +22,7 @@ import { TehaiDisplay } from "./_components/TehaiDisplay";
  *
  */
 export default function TrainingScreen() {
+  const { t } = useTranslation();
   // const { preferredSuit } = useSettings(); // Use if needed later
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [selectedMachi, setSelectedMachi] = useState<HaiKindId[]>([]);
@@ -82,7 +84,7 @@ export default function TrainingScreen() {
     if (isCorrect) return; // Disable input if already answered correctly
 
     if (selectedMachi.includes(hai)) {
-      setSelectedMachi((prev) => prev.filter((t) => t !== hai));
+      setSelectedMachi((prev) => prev.filter((tile) => tile !== hai));
     } else {
       setSelectedMachi((prev) => [...prev, hai]);
     }
@@ -112,7 +114,9 @@ export default function TrainingScreen() {
   if (isFinished) {
     return (
       <SafeAreaView className="flex-1 bg-background justify-center items-center">
-        <Text className="text-4xl text-text font-bold mb-8">Finish!</Text>
+        <Text className="text-4xl text-text font-bold mb-8">
+          {t("training.finish")}
+        </Text>
 
         <View className="flex-row gap-4">
           <Pressable
@@ -121,13 +125,13 @@ export default function TrainingScreen() {
               router.replace("/");
             }}
           >
-            <Text className="text-text font-bold">Home</Text>
+            <Text className="text-text font-bold">{t("training.home")}</Text>
           </Pressable>
           <Pressable
             className="bg-primary px-6 py-3 rounded-lg"
             onPress={startNewGameFlow}
           >
-            <Text className="text-white font-bold">Retry</Text>
+            <Text className="text-white font-bold">{t("training.retry")}</Text>
           </Pressable>
         </View>
       </SafeAreaView>
@@ -140,7 +144,10 @@ export default function TrainingScreen() {
     <SafeAreaView className="flex-1 bg-background">
       <Stack.Screen
         options={{
-          title: `Question ${currentIndex + 1} / 10`,
+          title: t("training.questionProgress", {
+            current: currentIndex + 1,
+            total: 10,
+          }),
           headerLeft: () => <CustomBackButton />,
         }}
       />

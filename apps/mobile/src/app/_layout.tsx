@@ -1,5 +1,5 @@
-import React from "react";
-import { View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, ActivityIndicator } from "react-native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "../global.css";
@@ -7,6 +7,7 @@ import {
   SettingsProvider,
   useSettings,
 } from "../features/settings/SettingsContext";
+import { initI18n } from "../i18n";
 
 function ThemeRoot() {
   const { theme } = useSettings();
@@ -43,6 +44,27 @@ function ThemeRoot() {
  *
  */
 export default function RootLayout() {
+  const [i18nInitialized, setI18nInitialized] = useState(false);
+
+  useEffect(() => {
+    initI18n()
+      .then(() => {
+        setI18nInitialized(true);
+      })
+      .catch((error: unknown) => {
+        console.error("Failed to initialize i18n:", error);
+        setI18nInitialized(true);
+      });
+  }, []);
+
+  if (!i18nInitialized) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
   return (
     <SettingsProvider>
       <ThemeRoot />
