@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { SettingsModal } from "../components/SettingsModal";
 import { PatternExplanationModal } from "../components/PatternExplanationModal";
-import { pattern13Content } from "@tamenchan-trainer/content";
+import { pattern13 } from "@tamenchan-trainer/content";
 
 /**
  *
@@ -73,7 +73,7 @@ export default function HomeScreen() {
         onClose={() => {
           setPattern13HelpVisible(false);
         }}
-        content={pattern13Content}
+        content={pattern13.ja}
       />
     </View>
   );

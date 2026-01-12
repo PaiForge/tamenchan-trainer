@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "./BookLayout.module.css";
+import { allPatterns, extractMarkdownTitle } from "@tamenchan-trainer/content";
 
 interface SidebarProps {
   readonly className?: string;
@@ -43,29 +44,23 @@ export function Sidebar({ className, onLinkClick }: SidebarProps) {
             基本パターン
           </h3>
           <ul style={{ listStyle: "none", padding: 0 }}>
-            <li>
-              <Link
-                href="/"
-                style={{
-                  display: "block",
-                  padding: "0.5rem 0",
-                  color: "#333",
-                  textDecoration: "none",
-                  fontWeight: "bold",
-                }}
-                onClick={onLinkClick}
-              >
-                13型 (1222型)
-              </Link>
-            </li>
-            {/* Future content */}
-            <li>
-              <span
-                style={{ display: "block", padding: "0.5rem 0", color: "#ccc" }}
-              >
-                14型 (Coming soon)
-              </span>
-            </li>
+            {allPatterns.map((pattern) => (
+              <li key={pattern.slug}>
+                <Link
+                  href={`/articles/patterns/${pattern.slug}`}
+                  style={{
+                    display: "block",
+                    padding: "0.5rem 0",
+                    color: "#333",
+                    textDecoration: "none",
+                    fontWeight: "bold",
+                  }}
+                  onClick={onLinkClick}
+                >
+                  {extractMarkdownTitle(pattern.ja)}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

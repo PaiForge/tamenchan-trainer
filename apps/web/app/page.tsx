@@ -1,29 +1,12 @@
-"use client";
-
-import {
-  pattern13Content,
-  extractMarkdownTitle,
-  removeMarkdownTitle,
-} from "@tamenchan-trainer/content";
-import { BookLayout } from "../components/layout/BookLayout";
-import dynamic from "next/dynamic";
-
-// SSRを無効にしてクライアントサイドのみで読み込む
-const MahjongMarkdown = dynamic(
-  () =>
-    import("../components/MahjongMarkdown").then((mod) => ({
-      default: mod.MahjongMarkdown,
-    })),
-  { ssr: false },
-);
+import { allPatterns, extractMarkdownTitle } from "@tamenchan-trainer/content";
+import { BookLayout } from "@/components/layout/BookLayout";
+import Link from "next/link";
+import React from "react";
 
 /**
- * ホームページコンポーネント
+ * ホームページコンポーネント (パターン一覧)
  */
 export default function Home() {
-  const title = extractMarkdownTitle(pattern13Content);
-  const body = removeMarkdownTitle(pattern13Content);
-
   return (
     <BookLayout>
       <header
@@ -42,7 +25,7 @@ export default function Home() {
             letterSpacing: "0.05em",
           }}
         >
-          Chapter 01
+          Tamenchan Trainer
         </p>
         <h1
           style={{
@@ -50,37 +33,44 @@ export default function Home() {
             fontWeight: "bold",
             color: "#333",
             lineHeight: "1.3",
+            marginBottom: "1rem",
           }}
         >
-          {title}
+          トレーニングパターン一覧
         </h1>
-        {/* Author info placeholder similar to Zenn */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginTop: "1rem",
-            gap: "0.5rem",
-          }}
-        >
-          <div
-            style={{
-              width: 24,
-              height: 24,
-              borderRadius: "50%",
-              backgroundColor: "#ddd",
-            }}
-          />
-          <span style={{ fontSize: "0.85rem", color: "#666" }}>
-            Tamenchan Official
-          </span>
-          <span style={{ fontSize: "0.85rem", color: "#ccc" }}>•</span>
-          <span style={{ fontSize: "0.85rem", color: "#888" }}>2025.01.12</span>
-        </div>
+        <p style={{ color: "#666" }}>多面張の形をパターン別に学習できます。</p>
       </header>
 
-      <div className="markdown-body">
-        <MahjongMarkdown content={body} />
+      <div style={{ display: "grid", gap: "1rem" }}>
+        {allPatterns.map((pattern) => (
+          <Link
+            key={pattern.slug}
+            href={`/articles/patterns/${pattern.slug}`}
+            style={{
+              display: "block",
+              padding: "1.5rem",
+              backgroundColor: "#f8f9fa",
+              border: "1px solid #e9ecef",
+              borderRadius: "8px",
+              textDecoration: "none",
+              color: "inherit",
+              transition: "box-shadow 0.2s",
+            }}
+          >
+            <h2
+              style={{
+                fontSize: "1.2rem",
+                fontWeight: "bold",
+                marginBottom: "0.5rem",
+              }}
+            >
+              {extractMarkdownTitle(pattern.ja)}
+            </h2>
+            <span style={{ fontSize: "0.9rem", color: "#666" }}>
+              {pattern.slug}
+            </span>
+          </Link>
+        ))}
       </div>
     </BookLayout>
   );
