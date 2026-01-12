@@ -39,6 +39,13 @@
     },
     "typecheck": {
       "dependsOn": ["^build"]
+    },
+    "gen:content": {
+      "cache": false
+    },
+    "gen:content:watch": {
+      "cache": false,
+      "persistent": true
     }
   }
 }

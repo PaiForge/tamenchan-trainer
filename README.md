@@ -13,7 +13,12 @@ tamenchan-trainer/
 │   └── mobile/          # React Native (Expo) モバイルアプリ
 ├── packages/            # 共有パッケージ（将来追加予定）
 └── docs/               # ドキュメント
+    ├── content-management.md # コンテンツ管理ガイド
 ```
+
+## ドキュメント
+
+- [コンテンツ管理ガイド (Content Management)](./docs/content-management.md): Markdown によるコンテンツ管理と Codegen について
 
 ## 前提条件 (Prerequisites)
 

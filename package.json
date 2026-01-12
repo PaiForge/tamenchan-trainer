@@ -18,6 +18,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
+    "gen:content": "turbo run gen:content",
+    "gen:content:watch": "turbo run gen:content:watch",
     "prepare": "husky"
   },
   "devDependencies": {
