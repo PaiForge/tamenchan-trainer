@@ -15,17 +15,18 @@
     "@pai-forge/riichi-mahjong": "^0.3.0",
     "@tamenchan-trainer/content": "workspace:*",
     "next": "^15.1.6",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-markdown": "^9.0.1",
     "react-native-web": "^0.19.13",
+    "remark-breaks": "^4.0.0",
     "remark-gfm": "^4.0.0"
   },
   "devDependencies": {
     "@tamenchan-trainer/eslint-config-custom": "workspace:*",
     "@types/node": "^22.10.5",
-    "@types/react": "^19.0.6",
-    "@types/react-dom": "^19.0.3",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
     "eslint": "^9.17.0",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.0"

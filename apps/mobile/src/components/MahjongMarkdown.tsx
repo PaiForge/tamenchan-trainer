@@ -95,6 +95,10 @@ const customRules: RenderRules = {
       </Text>
     );
   },
+  // 改行を強制的に反映
+  softbreak: (node, _children, _parent, _styles) => {
+    return <Text key={node.key}>{"\n"}</Text>;
+  },
 };
 
 /**
