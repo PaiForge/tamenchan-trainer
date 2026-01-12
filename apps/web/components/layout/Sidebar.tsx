@@ -1,6 +1,10 @@
 import Link from "next/link";
 import styles from "./BookLayout.module.css";
-import { allPatterns, extractMarkdownTitle } from "@tamenchan-trainer/content";
+import {
+  allPatterns,
+  allBasics,
+  extractMarkdownTitle,
+} from "@tamenchan-trainer/content";
 
 interface SidebarProps {
   readonly className?: string;
@@ -23,11 +27,51 @@ export function Sidebar({ className, onLinkClick }: SidebarProps) {
           <h2
             style={{ fontSize: "1.2rem", fontWeight: "bold", color: "#3ea8ff" }}
           >
-            Tamenchan
+            <Link
+              href="/"
+              style={{ color: "inherit", textDecoration: "none" }}
+              onClick={onLinkClick}
+            >
+              Tamenchan
+            </Link>
           </h2>
           <p style={{ fontSize: "0.8rem", color: "#666" }}>
             多面張待ち当てトレーニング
           </p>
+        </div>
+
+        <div style={{ marginBottom: "1.5rem" }}>
+          <h3
+            style={{
+              fontSize: "0.85rem",
+              fontWeight: "bold",
+              color: "#888",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              marginBottom: "0.5rem",
+            }}
+          >
+            基礎知識
+          </h3>
+          <ul style={{ listStyle: "none", padding: 0 }}>
+            {allBasics.map((article) => (
+              <li key={article.slug}>
+                <Link
+                  href={`/articles/basics/${article.slug}`}
+                  style={{
+                    display: "block",
+                    padding: "0.5rem 0",
+                    color: "#333",
+                    textDecoration: "none",
+                    fontWeight: "bold",
+                  }}
+                  onClick={onLinkClick}
+                >
+                  {extractMarkdownTitle(article.ja)}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
 
         <div style={{ marginBottom: "1.5rem" }}>

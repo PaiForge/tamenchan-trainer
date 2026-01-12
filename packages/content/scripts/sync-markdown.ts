@@ -4,60 +4,49 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PATTERNS_DIR = path.resolve(__dirname, "../src/patterns");
+const SRC_DIR = path.resolve(__dirname, "../src");
+
+const CATEGORIES = ["patterns", "basics"];
 
 const isWatchMode = process.argv.includes("--watch");
 
 /**
- * Scan for directories in src/patterns containing ja.md
+ * Scan for directories in src/{category} containing ja.md
  */
 async function syncMarkdown() {
   console.log("Syncing markdown files...");
 
   try {
-    const entries = await fs.readdir(PATTERNS_DIR, { withFileTypes: true });
-
-    // Find directories that look like patterns (not files, not starting with .)
-    const patternDirs = entries
-      .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."))
-      .map((entry) => entry.name);
-
-    if (patternDirs.length === 0) {
-      console.log("No pattern directories found.");
-    } else {
-      const validSlugs: string[] = [];
-      for (const slug of patternDirs) {
-        const success = await generateTsFile(slug);
-        if (success) {
-          validSlugs.push(slug);
-        }
-      }
-      await generateRootIndexFile(validSlugs);
-      console.log(`Successfully synced ${validSlugs.length} patterns.`);
+    for (const category of CATEGORIES) {
+      await syncCategory(category);
     }
 
     if (isWatchMode) {
-      console.log(`Watching for changes in ${PATTERNS_DIR}...`);
-      watch(PATTERNS_DIR, { recursive: true }, async (eventType, filename) => {
+      console.log(`Watching for changes in ${SRC_DIR}...`);
+      watch(SRC_DIR, { recursive: true }, async (eventType, filename) => {
         if (!filename) return;
 
-        // Check if the change happened inside a pattern directory
-        // filename looks like "pattern13/ja.md" or "pattern13/index.ts"
+        // filename looks like "patterns/p13/ja.md"
         const parts = filename.split(path.sep);
-        if (parts.length >= 2) {
-          const slug = parts[0];
+        if (parts.length >= 3) {
+          const category = parts[0];
+          const slug = parts[1];
           const file = parts[parts.length - 1]; // e.g. ja.md
 
-          if (file === "ja.md") {
+          if (CATEGORIES.includes(category) && file === "ja.md") {
             console.log(`File changed: ${filename}`);
-            const success = await generateTsFile(slug);
+            const success = await generateTsFile(category, slug);
             if (success) {
-              // We might need to regenerate root index if a new pattern was added (though watch mode usually catches existing ones)
-              // For simplicity in watch mode, strictly regenerating root index might be overkill if we just edit content,
-              // but if we add a new folder it matters.
-              // However, fs.watch on parent dir should catch generated index.ts changes too, avoiding loops is key.
-              // For now, let's just regenerate the specific file.
-              // If we want to support adding new directories in watch mode, we need to scan again.
+              // Update index if needed (simplified: always update root index for now or rely on specific command)
+              // regenerating root index for category
+              const categoryDir = path.join(SRC_DIR, category);
+              const entries = await fs.readdir(categoryDir, {
+                withFileTypes: true,
+              });
+              const validSlugs = entries
+                .filter((e) => e.isDirectory() && !e.name.startsWith("."))
+                .map((e) => e.name);
+              await generateRootIndexFile(category, validSlugs);
             }
           }
         }
@@ -71,60 +60,110 @@ async function syncMarkdown() {
   }
 }
 
-async function generateRootIndexFile(slugs: string[]) {
+async function syncCategory(category: string) {
+  const categoryDir = path.join(SRC_DIR, category);
+
+  // Ensure category dir exists
+  try {
+    await fs.access(categoryDir);
+  } catch {
+    // Create if not exists? Or just skip/warn?
+    // Let's create it to be safe or just skip
+    console.log(`Category directory ${category} does not exist, creating...`);
+    await fs.mkdir(categoryDir, { recursive: true });
+  }
+
+  const entries = await fs.readdir(categoryDir, { withFileTypes: true });
+
+  // Find directories that look like content
+  const slugDirs = entries
+    .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."))
+    .map((entry) => entry.name);
+
+  if (slugDirs.length === 0) {
+    console.log(`No content found in ${category}.`);
+  } else {
+    const validSlugs: string[] = [];
+    for (const slug of slugDirs) {
+      const success = await generateTsFile(category, slug);
+      if (success) {
+        validSlugs.push(slug);
+      }
+    }
+    await generateRootIndexFile(category, validSlugs);
+    console.log(
+      `Successfully synced ${validSlugs.length} items in ${category}.`,
+    );
+  }
+}
+
+function slugToVarName(slug: string): string {
+  return slug.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+}
+
+async function generateRootIndexFile(category: string, slugs: string[]) {
+  // capitalize category name for export (e.g. allPatterns, allBasics)
+  const capitalizedCategory =
+    category.charAt(0).toUpperCase() + category.slice(1);
+  const arrayName = `all${capitalizedCategory}`;
+
   const indexContent = `// This file is auto-generated by scripts/sync-markdown.ts
 // Do not edit this file directly.
 
-${slugs.map((slug) => `import { ${slug} } from "./${slug}";`).join("\n")}
+${slugs.map((slug) => `import { ${slugToVarName(slug)} } from "./${slug}";`).join("\n")}
 
 ${slugs.map((slug) => `export * from "./${slug}";`).join("\n")}
 
-export const allPatterns = [
-${slugs.map((slug) => `  ${slug},`).join("\n")}
+export const ${arrayName} = [
+${slugs.map((slug) => `  ${slugToVarName(slug)},`).join("\n")}
 ];
 `;
 
-  const indexPath = path.join(PATTERNS_DIR, "index.ts");
+  const indexPath = path.join(SRC_DIR, category, "index.ts");
   await fs.writeFile(indexPath, indexContent, "utf-8");
-  console.log(`Generated patterns/index.ts`);
+  console.log(`Generated ${category}/index.ts`);
 }
 
-async function generateTsFile(slug: string): Promise<boolean> {
-  const patternDir = path.join(PATTERNS_DIR, slug);
-  const mdPath = path.join(patternDir, "ja.md");
-  const tsPath = path.join(patternDir, "index.ts");
+async function generateTsFile(
+  category: string,
+  slug: string,
+): Promise<boolean> {
+  const dirPath = path.join(SRC_DIR, category, slug);
+  const mdPath = path.join(dirPath, "ja.md");
+  const tsPath = path.join(dirPath, "index.ts");
 
   try {
-    // Check if ja.md exists
     try {
       await fs.access(mdPath);
     } catch {
-      // Skip if no ja.md found (maybe just an empty dir or unrelated dir)
       return false;
     }
 
     const content = await fs.readFile(mdPath, "utf-8");
 
-    // Variable name logic: pattern13 -> pattern13Content (backward compatibility)
-    // Also export a structured object
-    const legacyVarName = `${slug}Content`;
+    const varName = slugToVarName(slug);
+
+    // Legacy support logic: only for pattern13->p13 case?
+    // Actually, for new contents like basic articles, we don't strictly need legacy "content" var.
+    // But consistency is good.
+    const contentVarName = `${varName}Content`;
 
     const tsContent = `// This file is auto-generated by scripts/sync-markdown.ts
 // Do not edit this file directly.
 
-export const ${legacyVarName} = ${JSON.stringify(content)};
+export const ${contentVarName} = ${JSON.stringify(content)};
 
-export const ${slug} = {
+export const ${varName} = {
   slug: "${slug}",
-  ja: ${legacyVarName},
+  ja: ${contentVarName},
 } as const;
 `;
 
     await fs.writeFile(tsPath, tsContent, "utf-8");
-    console.log(`Generated ${path.join(slug, "index.ts")}`);
+    console.log(`Generated ${path.join(category, slug, "index.ts")}`);
     return true;
   } catch (error) {
-    console.error(`Failed to generate TS for ${slug}`, error);
+    console.error(`Failed to generate TS for ${category}/${slug}`, error);
     return false;
   }
 }
