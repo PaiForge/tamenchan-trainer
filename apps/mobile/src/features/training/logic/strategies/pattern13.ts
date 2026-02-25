@@ -102,8 +102,7 @@ export const Pattern13Strategy: GenerationStrategy = {
     }
 
     const effectiveOptions: TransformOptions = {
-      mirror: false, // Normal では mirror を使用しない
-      ...options, // ユーザー指定がある場合は上書き
+      mirror: options?.mirror ?? false, // Normal ではデフォルトで mirror を使用しない
       shift, // shift は常に上記で決定した値を使用
     };
 
@@ -159,8 +158,10 @@ export const Pattern13Strategy: GenerationStrategy = {
     const baseTiles = [1, 2, 2, 2, 4];
 
     // optionsでshiftが指定されていない場合は、0-5の範囲でランダム
+    // NOTE: mirror は false 固定。[1,2,2,2,4] をミラーすると [6,8,8,8,9] となり、
+    // 隣接構造が壊れてテンパイ形を維持できなくなるため。
     const effectiveOptions: TransformOptions = {
-      ...options,
+      mirror: options?.mirror ?? false,
       shift: options?.shift ?? Math.floor(Math.random() * 6),
     };
 

@@ -30,8 +30,8 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@pai-forge/riichi-mahjong':
-        specifier: ^0.3.0
-        version: 0.3.0
+        specifier: 0.3.5
+        version: 0.3.5
       '@react-native-async-storage/async-storage':
         specifier: 2.2.0
         version: 2.2.0(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))
@@ -151,8 +151,8 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@pai-forge/riichi-mahjong':
-        specifier: ^0.3.0
-        version: 0.3.0
+        specifier: 0.3.5
+        version: 0.3.5
       '@tamenchan-trainer/content':
         specifier: workspace:*
         version: link:../../packages/content
@@ -203,8 +203,8 @@ importers:
   packages/content:
     dependencies:
       '@pai-forge/riichi-mahjong':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: 0.3.5
+        version: 0.3.5
     devDependencies:
       '@tamenchan-trainer/eslint-config-custom':
         specifier: workspace:*
@@ -225,8 +225,8 @@ importers:
   packages/core:
     dependencies:
       '@pai-forge/riichi-mahjong':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: 0.3.5
+        version: 0.3.5
     devDependencies:
       '@tamenchan-trainer/eslint-config-custom':
         specifier: workspace:*
@@ -1420,8 +1420,8 @@ packages:
     resolution: {integrity: sha512-WGfVEcdRR3dobSmRQsG/L1RijJ6UqZiJpXRuPKCWCsMaDR0kuoG1nTvMSZ7YvJIRnJcMW9cZ9qG8lNgIUY9Rog==}
     engines: {node: '>=20.0.0'}
 
-  '@pai-forge/riichi-mahjong@0.3.0':
-    resolution: {integrity: sha512-TKvEQsfFFkcVH7dRs10F5WrTsuhnR2G4yT8Z+PQq0JgTaONEzzzBIemEZFO09mxA9NwenrnVymV1z1R0tgni/A==}
+  '@pai-forge/riichi-mahjong@0.3.5':
+    resolution: {integrity: sha512-MEx2zLBLNOnwwXFFYcwh6ChpZG2lQgWE64i2Y43HlbAXzjw3dd0iqaLHjU9Hih6/kWS37+gVOvpAb7B2NdKOxg==}
     engines: {node: '>=20.0.0'}
 
   '@radix-ui/primitive@1.1.3':
@@ -7014,7 +7014,7 @@ snapshots:
 
   '@pai-forge/riichi-mahjong@0.1.0': {}
 
-  '@pai-forge/riichi-mahjong@0.3.0': {}
+  '@pai-forge/riichi-mahjong@0.3.5': {}
 
   '@radix-ui/primitive@1.1.3': {}
 

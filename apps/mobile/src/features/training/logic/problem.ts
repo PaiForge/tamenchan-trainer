@@ -3,6 +3,7 @@ import {
   HaiType,
   HaiKind,
   getUkeire,
+  assertTehai13,
 } from "@pai-forge/riichi-mahjong";
 import { PatternId, SUPPORTED_PATTERNS, Suupai } from "@tamenchan-trainer/core";
 import { Strategies, TransformOptions } from "./strategies";
@@ -128,13 +129,13 @@ export function generateProblem(
 
   const tehai = [...coreTiles, ...padding].sort((a, b) => a - b);
 
-  // HACK: 現状、getUkeire が内部的に validateTehai を実行しているため、
-  // ここで明示的に validateTehai13 を呼び出していない。
-  // 将来的には getUkeire に依存せず、明示的にバリデーションを実行すべき。
+  const tehaiObj = { closed: tehai, exposed: [] as const };
+  assertTehai13(tehaiObj);
+
   return {
     tehai,
     tsumo: null,
-    machi: getUkeire({ closed: tehai, exposed: [] }),
+    machi: getUkeire(tehaiObj),
     suit: targetSuit,
   };
 }
