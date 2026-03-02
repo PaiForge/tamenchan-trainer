@@ -82,7 +82,6 @@ export function MahjongMarkdown({ content }: Readonly<MahjongMarkdownProps>) {
   /**
    * children を再帰的に処理して、プレースホルダーを牌コンポーネントに変換
    */
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
   const processChildren = (children: React.ReactNode): React.ReactNode => {
     return React.Children.map(children, (child) => {
       if (typeof child === "string") {
@@ -97,7 +96,6 @@ export function MahjongMarkdown({ content }: Readonly<MahjongMarkdownProps>) {
           props.children !== null &&
           props.children !== undefined
         ) {
-          // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
           const childrenNode = props.children as React.ReactNode;
           return React.cloneElement(
             child,

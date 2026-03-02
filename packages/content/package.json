@@ -16,7 +16,7 @@
     "gen:content:watch": "tsx scripts/sync-markdown.ts --watch"
   },
   "dependencies": {
-    "@pai-forge/riichi-mahjong": "0.3.5"
+    "@pai-forge/riichi-mahjong": "0.3.6"
   },
   "devDependencies": {
     "@tamenchan-trainer/eslint-config-custom": "workspace:*",

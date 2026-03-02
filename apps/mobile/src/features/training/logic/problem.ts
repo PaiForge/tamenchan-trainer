@@ -3,7 +3,7 @@ import {
   HaiType,
   HaiKind,
   getUkeire,
-  assertTehai13,
+  validateTehai13,
 } from "@pai-forge/riichi-mahjong";
 import { PatternId, SUPPORTED_PATTERNS, Suupai } from "@tamenchan-trainer/core";
 import { Strategies, TransformOptions } from "./strategies";
@@ -130,12 +130,13 @@ export function generateProblem(
   const tehai = [...coreTiles, ...padding].sort((a, b) => a - b);
 
   const tehaiObj = { closed: tehai, exposed: [] as const };
-  assertTehai13(tehaiObj);
+  const result = validateTehai13(tehaiObj);
+  if (result.isErr()) throw result.error;
 
   return {
     tehai,
     tsumo: null,
-    machi: getUkeire(tehaiObj),
+    machi: getUkeire(result.value),
     suit: targetSuit,
   };
 }

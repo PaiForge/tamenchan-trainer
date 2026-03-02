@@ -14,8 +14,9 @@ export const TILE_NOTATION_PATTERN = /\{\{([^}]+)\}\}/g;
  * @throws パースに失敗した場合はエラーをスロー
  */
 export function parseTileNotation(notation: string): readonly HaiKindId[] {
-  const tehai = parseMspz(notation);
-  return tehai.closed;
+  const result = parseMspz(notation);
+  if (result.isErr()) throw result.error;
+  return result.value.closed;
 }
 
 /**
